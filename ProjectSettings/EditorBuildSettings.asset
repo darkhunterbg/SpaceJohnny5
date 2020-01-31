@@ -4,5 +4,20 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Levels/BootScene.unity
+    guid: 6401f07ce1a19524f9afe351da6e37da
+  - enabled: 1
+    path: Assets/Levels/Level_Defeat.unity
+    guid: c086d9418c2eae743bae8a88405b3e47
+  - enabled: 1
+    path: Assets/Levels/Level_Game.unity
+    guid: 7fad3d1c98403fc4a84a8436f8d93b85
+  - enabled: 1
+    path: Assets/Levels/Level_Intro.unity
+    guid: 17ad1d93628c1b0478f054ad9fd15470
+  - enabled: 1
+    path: Assets/Levels/Level_Victory.unity
+    guid: b4108da0f7ca31f44a85c7960f79bae0
   m_configObjects: {}
