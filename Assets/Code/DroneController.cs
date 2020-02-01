@@ -15,6 +15,11 @@ public class DroneController : MonoBehaviour
 	public Vector2 RotationRateOffsetScale = Vector2.one * 0.1f;
 	public float MaxVelocityDistanceShift = 1;
 	public AnimationCurve MaxVelocityDistanceShiftCurve = AnimationCurve.Linear(0, 0, 1, 1);
+	public float VeriticalShiftMaxRotationRateReducing = 1;
+
+	[Header("Input")]
+	public float MouseMovementDeadZone = 0.01f;
+	public float MouseMovementMaxZone = 0.9f;
 
 	[Header("Drone Settings")]
 	public float MaxVelocity = 5;
@@ -25,13 +30,20 @@ public class DroneController : MonoBehaviour
 	public float MaxRotationRate = 100;
 	public float RotationRateAccel = 50;
 
-	public float NoInputRotationRateDampening = 0.5f;
+	public AnimationCurve NoInputRotationRateDampeningCurve = AnimationCurve.Linear(0, 0, 1, 1);
+	public float NoInputRotationRateDampeningTime = 2;
 
+	public float RotationRateMouseInputAccelMultiplier = 1;
+
+	[Header("Other")]
 	public Vector2 RotationRateExtraVisualRotateScale = Vector2.one * 0.1f;
 
 	[Header("Stats")]
 	public float Velocity;
+
+	[HideInInspector]
 	public Vector2 RotationRate;
+	public float RotationRateMagnitude;
 
 	// Start is called before the first frame update
 	void Start()
@@ -39,49 +51,63 @@ public class DroneController : MonoBehaviour
 
 	}
 
-	Vector2 NormalizedMousePos()
+	Vector2 GetMouseMovement()
 	{
-		return (Input.mousePosition / new Vector2(Screen.width, Screen.height));
+		Vector2 mousePos = (Input.mousePosition / new Vector2(Camera.pixelWidth, Camera.pixelHeight));
+		Vector2 mousePosLinear = mousePos * 2.0f - Vector2.one;
+
+		float d = MouseMovementMaxZone - MouseMovementDeadZone;
+
+		float l = Mathf.Clamp(mousePosLinear.magnitude - MouseMovementDeadZone, 0, d);
+
+		mousePosLinear = mousePosLinear.normalized * Mathf.Lerp(0, 1, l / d);
+
+		return mousePosLinear;
 	}
 
 	// Update is called once per frame
 	void FixedUpdate()
 	{
-		bool input = Input.GetMouseButton(0);
+		ProcessOrientation(input);
 
-		MovementActivateObject.SetActive(input);
-
-		ProcessOrientation();
-
-		float accel = input ? Acceleration : (-Velocity * NoInputDampening) ;
+		float accel = input ? Acceleration : (-Velocity * NoInputDampening);
 		Velocity = Mathf.Clamp(Velocity + accel * Time.fixedDeltaTime, 0, MaxVelocity);
 		if (Velocity < 0.01f)
 			Velocity = 0;
 		transform.position += Velocity * Time.fixedDeltaTime * transform.forward;
 	}
 
-	private void ProcessOrientation()
+	float noInputTime = 0;
+	float noInputRotationRateRef;
+	bool input = false;
+
+	private void ProcessOrientation(bool input)
 	{
-		bool input = Input.GetMouseButton(0);
-
-		Vector2 rotAccel = (-RotationRate * NoInputRotationRateDampening);
-		float maxRotRate = MaxRotationRate;
-
 		if (input) {
-			Vector2 mousePosLinear = NormalizedMousePos() * 2.0f - Vector2.one;
+			Vector2 mouseMov = GetMouseMovement();
+			mouseMov = new Vector2(-mouseMov.y, mouseMov.x);
 
-			rotAccel = mousePosLinear.normalized * RotationRateAccel;
-			rotAccel = new Vector2(-rotAccel.y, rotAccel.x);
+			Vector2 desiredRotationRate = mouseMov * MaxRotationRate;
+			Vector2 diff = desiredRotationRate - RotationRate;
 
-			maxRotRate = Mathf.Min(mousePosLinear.magnitude * MaxRotationRate, MaxRotationRate);
+			if (diff.magnitude < RotationRateAccel * Time.fixedDeltaTime)
+				RotationRate = desiredRotationRate;
+			else
+				RotationRate += diff.normalized * RotationRateAccel * Time.fixedDeltaTime;
+
+			float length = RotationRate.magnitude;
+			length = Mathf.Clamp(RotationRate.magnitude, 0, MaxRotationRate);
+			RotationRate = RotationRate.normalized * length;
+		} else {
+			RotationRate = (1.0f - NoInputRotationRateDampeningCurve.Evaluate(noInputTime / NoInputRotationRateDampeningTime)) * noInputRotationRateRef
+				* RotationRate.normalized;
 		}
-	
 
-		RotationRate += rotAccel * Time.fixedDeltaTime;
-		float length = Mathf.Clamp(RotationRate.magnitude, 0, maxRotRate);
-		RotationRate = RotationRate.normalized * length;
+
 		if (RotationRate.magnitude < 0.1f)
 			RotationRate = Vector2.zero;
+
+		RotationRateMagnitude = RotationRate.magnitude;
 
 		if (RotationRate != Vector2.zero) {
 			Vector3 rot = new Vector3(RotationRate.x, RotationRate.y, 0);
@@ -89,30 +115,37 @@ public class DroneController : MonoBehaviour
 			transform.Rotate(rot);
 		}
 
-		ShipVisual.transform.localRotation = Quaternion.Euler(new Vector3(RotationRate.x * RotationRateExtraVisualRotateScale.y, RotationRate.y * RotationRateExtraVisualRotateScale.x, 0) );
-		//ShipVisual.transform.Rotate(new Vector3(-mouseOffset.y * 30, mouseOffset.x * 30, 0));
+		ShipVisual.transform.localRotation = Quaternion.Euler(new Vector3(RotationRate.x * RotationRateExtraVisualRotateScale.y, RotationRate.y * RotationRateExtraVisualRotateScale.x, 0));
 	}
+
+
 
 	private void Update()
 	{
-		bool input = Input.GetMouseButton(0);
-		Vector2 mouseOffset = Vector2.zero;
-		if (input) {
-			Vector2 sceenCenter = new Vector2(Screen.width, Screen.height) / 2;
-			Vector2 mousePos = Input.mousePosition;
-			mouseOffset = mousePos - sceenCenter;
-			mouseOffset /= 200.0f;
-		}
+		input = Input.GetMouseButton(0);
+
+		MovementActivateObject.SetActive(input);
+
+		if (input)
+			noInputTime = 0;
+		else
+			noInputTime += Time.deltaTime;
+
+		if (Input.GetMouseButtonUp(0))
+			noInputRotationRateRef = RotationRate.magnitude;
 
 		Vector3 offset = Vector3.zero;
 		float extraDistanceShift = MaxVelocityDistanceShiftCurve.Evaluate(Velocity / MaxVelocity) * MaxVelocityDistanceShift;
 		float distance = Distance + extraDistanceShift;
 		offset += -transform.forward * distance;
-		offset += transform.up * VerticalShift;
+
+		float verticalShift = VerticalShift * (1.0f - VeriticalShiftMaxRotationRateReducing * MaxVelocityDistanceShiftCurve.Evaluate(RotationRateMagnitude / MaxRotationRate));
+
+		offset += transform.up * verticalShift;
 		Camera.transform.position = transform.position + offset;
 		Camera.transform.rotation = transform.rotation;
 
 		// TODO: Dampening/Curve for rotation vertor shifting
-		Camera.transform.Rotate(new Vector3(RotationRate.x * RotationRateOffsetScale.y, RotationRate.y* RotationRateOffsetScale.x, 0));
+		Camera.transform.Rotate(new Vector3(RotationRate.x * RotationRateOffsetScale.y, RotationRate.y * RotationRateOffsetScale.x, 0));
 	}
 }

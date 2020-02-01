@@ -4834,10 +4834,42 @@ MonoBehaviour:
   MovementActivateObject: {fileID: 7504337634297544580}
   ShipVisual: {fileID: 7504337635592308914}
   Distance: 5
-  VerticalShift: 1.8
-  RotationRateOffsetScale: {x: 0.4, y: 0.2}
-  MaxVelocityDistanceShift: 4
+  VerticalShift: 2
+  RotationRateOffsetScale: {x: 0.3, y: 0.2}
+  MaxVelocityDistanceShift: 3
   MaxVelocityDistanceShiftCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  VeriticalShiftMaxRotationRateReducing: 1
+  MouseMovementDeadZone: 0.05
+  MouseMovementMaxZone: 0.7
+  MaxVelocity: 10
+  Acceleration: 10
+  NoInputDampening: 4
+  MaxRotationRate: 90
+  RotationRateAccel: 100
+  NoInputRotationRateDampeningCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -4861,15 +4893,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  MaxVelocity: 10
-  Acceleration: 10
-  NoInputDampening: 4
-  MaxRotationRate: 100
-  RotationRateAccel: 100
-  NoInputRotationRateDampening: 4
-  RotationRateExtraVisualRotateScale: {x: 0.5, y: 0.5}
-  Velocity: 0.016280316
+  NoInputRotationRateDampeningTime: 1
+  RotationRateMouseInputAccelMultiplier: 2
+  RotationRateExtraVisualRotateScale: {x: 0.3, y: 0.3}
+  Velocity: 0
   RotationRate: {x: 0, y: 0}
+  RotationRateMagnitude: 0
 --- !u!1 &7504337634468531095
 GameObject:
   m_ObjectHideFlags: 0
