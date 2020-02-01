@@ -298,6 +298,8 @@ MonoBehaviour:
   Bounds:
     m_Center: {x: -0.12, y: 0, z: 0}
     m_Extent: {x: 0, y: 0, z: 0}
+  LevelEnvironmentsDef: {fileID: 11400000, guid: 2403ccc97f47edd478d150502b106bed,
+    type: 2}
 --- !u!1001 &805828368
 PrefabInstance:
   m_ObjectHideFlags: 0
