@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class DroneLogic : MonoBehaviour
 {
-	public delegate void OnBatteryDrainedCallback(float amount, float battery, bool damage);
-	public event OnBatteryDrainedCallback OnBatteryDrained;
+	public delegate void OnBatteryChangedCallback(float amount, float battery, bool damage);
+	public event OnBatteryChangedCallback OnBatteryChanged;
 	public bool Dead => _batteryRemaining <= 0;
 
 	public float BatteryRemaining => _batteryRemaining;
@@ -27,8 +27,26 @@ public class DroneLogic : MonoBehaviour
 		DrainBattery(amount, damage: true);
 	}
 
+	public void ChargeBattery(float amount) // percentage 0..100
+	{
+		if (Dead) {
+			return;
+		}
+		
+		OnBatteryChanged?.Invoke(amount, _batteryRemaining, false);
+		_batteryRemaining += amount;
+		
+		if (_batteryRemaining > 100) {
+			_batteryRemaining = 100;
+		}
+	}
+	
 	public void OnCollisionEnter(Collision other)
 	{
+		if (!other.collider.enabled) {
+			return;
+		}
+
 		string hitLayer = LayerMask.LayerToName(other.collider.gameObject.layer);
 		Debug.Log($"Collision: {LayerMask.LayerToName(other.collider.gameObject.layer)}");
 
@@ -43,6 +61,10 @@ public class DroneLogic : MonoBehaviour
 			
 			case "Ship":
 				DropParts(other.gameObject);
+				break;
+			
+			case "Battery":
+				ChargeBattery(20);
 				break;
 		}
 	}
@@ -61,7 +83,7 @@ public class DroneLogic : MonoBehaviour
 			return;
 		}
 		
-		OnBatteryDrained?.Invoke(amount, _batteryRemaining, damage);
+		OnBatteryChanged?.Invoke(-amount, _batteryRemaining, damage);
 		_batteryRemaining -= amount;
 		
 		if (_batteryRemaining <= 0) {
