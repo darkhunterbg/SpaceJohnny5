@@ -43,7 +43,7 @@ MonoBehaviour:
     value: {x: 70.33209, y: 96.71933}
   minLuminance:
     overrideState: 1
-    value: -0.4
+    value: -0.8
   maxLuminance:
     overrideState: 1
     value: 9
@@ -203,7 +203,7 @@ MonoBehaviour:
     value: 1
   temperature:
     overrideState: 1
-    value: 41
+    value: 30
   tint:
     overrideState: 0
     value: 0
@@ -221,7 +221,7 @@ MonoBehaviour:
     value: 52
   postExposure:
     overrideState: 1
-    value: 1.46
+    value: 0.21
   contrast:
     overrideState: 0
     value: -16

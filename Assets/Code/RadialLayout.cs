@@ -9,6 +9,7 @@ public class RadialLayout : MonoBehaviour
 	public float Angle, StartAngle;
 
 	public PingPongValue Contraction;
+	public bool forceEval;
 
 	void Awake()
 	{
@@ -37,6 +38,13 @@ public class RadialLayout : MonoBehaviour
 
 	private void Update()
 	{
-		CalculateRadial(Contraction.CurrentValue);
+		if (Contraction == null) {
+			if (forceEval) {
+				CalculateRadial(fDistance);
+			}
+		}
+		else {
+			CalculateRadial(Contraction.CurrentValue);
+		}
 	}
 }

@@ -610,6 +610,8 @@ MonoBehaviour:
   TimeElapsedText: {fileID: 3582363266730297663}
   PartsLeftText: {fileID: 5760589726519442192}
   MovementCursor: {fileID: 177535804209812652}
+  GravityWellWarningPrefab: {fileID: 3779765984992681956, guid: a46f250d82b40c54c990bfc6143e3eb9,
+    type: 3}
 --- !u!1001 &364564205244439896
 PrefabInstance:
   m_ObjectHideFlags: 0
