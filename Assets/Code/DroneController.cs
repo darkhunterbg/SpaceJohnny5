@@ -100,7 +100,7 @@ public class DroneController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if(State== DroneControllerState.Hit && Velocity.magnitude == 0) {
+		if (State== DroneControllerState.Hit && Velocity.magnitude == 0) {
 			State = DroneControllerState.FreeControl;
 		}
 
@@ -114,6 +114,7 @@ public class DroneController : MonoBehaviour
 		if (State == DroneControllerState.FreeControl) {
 			mouseInput = ProcessInput(deltaT, ref Acceleration);
 		}
+
 
 		if (!mouseInput) {
 			RotationRate = (1.0f - NoInputRotationRateDampeningCurve.Evaluate(noInputTime / NoInputRotationRateDampeningTime)) * noInputRotationRateRef * RotationRate.normalized;
