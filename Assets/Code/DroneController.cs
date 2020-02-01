@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public enum DroneControllerState
 {
@@ -11,7 +9,8 @@ public enum DroneControllerState
 public class DroneController : MonoBehaviour
 {
 	public Camera Camera;
-	public GameObject MovementActivateObject;
+	public ParticleSystem LeftThruster;
+	public ParticleSystem RightThruster;
 	public GameObject ShipVisual;
 
 	[Header("Camera Settings")]
@@ -136,10 +135,8 @@ public class DroneController : MonoBehaviour
 
 		if (Acceleration == Vector3.zero) {
 			Acceleration = (-Velocity * NoInputDampening);
-			MovementActivateObject.SetActive(false);
 		} else {
 			Acceleration = Acceleration.normalized * Mathf.Clamp(Acceleration.magnitude, 0, ForwardAcceleration);
-			MovementActivateObject.SetActive(true);
 		}
 
 		AccelerationMagnitude = Acceleration.magnitude;
@@ -190,21 +187,44 @@ public class DroneController : MonoBehaviour
 			RotationRate = RotationRate.normalized * length;
 		}
 
+		bool leftState = false;
+		bool rightState = false;
+
+
 		Acceleration = Vector3.zero;
 		if (Input.GetKey(KeyCode.W)) {
 			Acceleration += transform.forward * ForwardAcceleration;
+			leftState = true;
+			rightState = true;
 		}
 		if (Input.GetKey(KeyCode.S)) {
 			Acceleration -= transform.forward * BackwardAcceleration;
+			leftState = true;
+			rightState = true;
 		}
 		if (Input.GetKey(KeyCode.A)) {
 			Acceleration -= transform.right * StrafeAcceleration;
+			rightState = true;
+		
 		}
 		if (Input.GetKey(KeyCode.D)) {
 			Acceleration += transform.right * StrafeAcceleration;
+			leftState = true;
 		}
 
+#pragma warning disable 0618
+		if (leftState && !LeftThruster.enableEmission)
+			LeftThruster.enableEmission = true;
 
+		if (!leftState && LeftThruster.enableEmission)
+			LeftThruster.enableEmission = false;
+
+		if (rightState && !RightThruster.enableEmission)
+			RightThruster.enableEmission = true;
+
+		if (!rightState && RightThruster.enableEmission)
+			RightThruster.enableEmission = false;
+#pragma warning restore 0618
 		return input;
 	}
 
