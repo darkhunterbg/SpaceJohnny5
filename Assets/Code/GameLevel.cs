@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameLevel : MonoBehaviour
@@ -10,6 +11,8 @@ public class GameLevel : MonoBehaviour
 	public DroneController Drone { get; private set; }
 
 	private LevelEnvironmentInstance _levelEnvironmentInstnance;
+
+	public List<GravityWell> GravityWells { get; private set; } = new List<GravityWell>();
 
 	public void Start()
 	{
