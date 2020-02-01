@@ -21,7 +21,7 @@ public class ShipLogic : MonoBehaviour
 
 		_view.SetPartsLeft(PartsReceived, PartsTotal);
 		
-		if (PartsReceived == PartsTotal) {
+		if (PartsReceived >= PartsTotal) {
 			Game.Instance.StartLevel("Victory", new GameResult {
 				Type = GameResultType.Victory,
 				PartsReceived = PartsReceived,
