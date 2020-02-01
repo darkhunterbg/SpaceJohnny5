@@ -12,6 +12,9 @@ public class DroneController : MonoBehaviour
 
 	public float Distance;
 	public float VerticalShift;
+	public Vector2 RotationRateOffsetScale = Vector2.one * 0.1f;
+	public float MaxVelocityDistanceShift = 1;
+	public AnimationCurve MaxVelocityDistanceShiftCurve = AnimationCurve.Linear(0, 0, 1, 1);
 
 	[Header("Drone Settings")]
 	public float MaxVelocity = 5;
@@ -23,6 +26,8 @@ public class DroneController : MonoBehaviour
 	public float RotationRateAccel = 50;
 
 	public float NoInputRotationRateDampening = 0.5f;
+
+	public Vector2 RotationRateExtraVisualRotateScale = Vector2.one * 0.1f;
 
 	[Header("Stats")]
 	public float Velocity;
@@ -75,7 +80,7 @@ public class DroneController : MonoBehaviour
 		RotationRate += rotAccel * Time.fixedDeltaTime;
 		float length = Mathf.Clamp(RotationRate.magnitude, 0, maxRotRate);
 		RotationRate = RotationRate.normalized * length;
-		if (RotationRate.magnitude < 1.0f)
+		if (RotationRate.magnitude < 0.1f)
 			RotationRate = Vector2.zero;
 
 		if (RotationRate != Vector2.zero) {
@@ -84,7 +89,7 @@ public class DroneController : MonoBehaviour
 			transform.Rotate(rot);
 		}
 
-		//ShipVisual.transform.localRotation = Quaternion.Euler(new Vector3(RotationRate.x, RotationRate.y, 0));
+		ShipVisual.transform.localRotation = Quaternion.Euler(new Vector3(RotationRate.x * RotationRateExtraVisualRotateScale.y, RotationRate.y * RotationRateExtraVisualRotateScale.x, 0) );
 		//ShipVisual.transform.Rotate(new Vector3(-mouseOffset.y * 30, mouseOffset.x * 30, 0));
 	}
 
@@ -100,10 +105,14 @@ public class DroneController : MonoBehaviour
 		}
 
 		Vector3 offset = Vector3.zero;
-		offset += -transform.forward * Distance;
+		float extraDistanceShift = MaxVelocityDistanceShiftCurve.Evaluate(Velocity / MaxVelocity) * MaxVelocityDistanceShift;
+		float distance = Distance + extraDistanceShift;
+		offset += -transform.forward * distance;
 		offset += transform.up * VerticalShift;
 		Camera.transform.position = transform.position + offset;
 		Camera.transform.rotation = transform.rotation;
-		//Camera.transform.Rotate(new Vector3(-mouseOffset.y * 10, mouseOffset.x * 10, 0));
+
+		// TODO: Dampening/Curve for rotation vertor shifting
+		Camera.transform.Rotate(new Vector3(RotationRate.x * RotationRateOffsetScale.y, RotationRate.y* RotationRateOffsetScale.x, 0));
 	}
 }
