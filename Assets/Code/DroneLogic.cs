@@ -7,6 +7,8 @@ public class DroneLogic : MonoBehaviour
 	public event OnBatteryChangedCallback OnBatteryChanged;
 
 	public float ThrustersBatteryDrain = 1.0f;
+	public AudioSource HurtAudio;
+	public AudioSource BatteryPickUpAudio;
 	
 	public bool Dead => _batteryRemaining <= 0;
 	public float BatteryRemaining => _batteryRemaining;
@@ -53,6 +55,7 @@ public class DroneLogic : MonoBehaviour
 		switch (hitLayer) {
 			case "Obstacles":
 				Damage(20);
+				HurtAudio.Play();
 				break;
 			
 			case "Parts":
@@ -65,6 +68,7 @@ public class DroneLogic : MonoBehaviour
 			
 			case "PowerUps":
 				ChargeBattery(20, other.gameObject);
+				BatteryPickUpAudio.Play();
 				break;
 		}
 	}
