@@ -484,6 +484,76 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 600
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &1474474789
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1474474791}
+  - component: {fileID: 1474474790}
+  - component: {fileID: 1474474792}
+  m_Layer: 0
+  m_Name: SphereSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1474474790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474474789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd7495e3463f23441b9b6bcb7de42d54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MinObjects: 1
+  MaxObjects: 200
+  SphereRadius: 200
+  MinScale: 1
+  MaxScale: 3
+  SpawnableObject: {fileID: 6268348556567565351, guid: 644f65238dd499d4896ea130d24a5839,
+    type: 3}
+  SpawnObjects: 0
+--- !u!4 &1474474791
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474474789}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1474474792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474474789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1285cbe7cad5d77498a30c9ef1f5b6f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RotateAxis: {x: 1, y: 1, z: 0}
+  Speed: 10
+  RandomizeSpeed: 0
+  MinDegree: 0
+  MaxDegree: 0
+  CurrentRandeomDegree: 0
 --- !u!4 &1500121243 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7504337634304681764, guid: c16229ff250f18e4aa450bc4882d0e6e,

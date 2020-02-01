@@ -8,10 +8,21 @@ public class Rotator : MonoBehaviour
 
 	private float _degrees = 0;
 
+	public bool RandomizeSpeed;
+	public int MinDegree;
+	public int MaxDegree;
+
+	public float CurrentRandeomDegree;
+
 	// Update is called once per frame
 	void Update()
 	{
-		_degrees += Time.deltaTime * Speed;
+		if (RandomizeSpeed) {
+			CurrentRandeomDegree = Random.Range(MinDegree, MaxDegree) * Speed;
+			_degrees += CurrentRandeomDegree;
+		} else {
+			_degrees += Time.deltaTime * Speed;
+		}
 		_degrees = (_degrees % 360 + 360) % 360;
 
 		transform.localRotation = Quaternion.Euler(RotateAxis.x * _degrees, RotateAxis.y * _degrees, 0);
