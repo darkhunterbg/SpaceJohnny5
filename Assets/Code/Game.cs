@@ -10,23 +10,22 @@ using UnityEditor;
 
 public class Game : MonoBehaviour
 {
-	public static Game Instance;
-
 	private const string LevelPrefix = "Level_";
 	private const float TransitionTime = 0.5f;
+
+	public static Game Instance;
+	public object LevelParams;
 	
 	private Dictionary<string, int> _levels = new Dictionary<string, int>();
 	private CanvasGroup _curtainCanvas;
-	
+	private bool CurtainUp => _curtainCanvas.alpha == 0;
+
 	public void Awake()
 	{
-		if (Instance == null)
-		{
+		if (Instance == null) {
 			Instance = this;
 			DontDestroyOnLoad(this);
-		}
-		else
-		{
+		} else {
 			Destroy(gameObject);
 		}
 	}
@@ -34,21 +33,18 @@ public class Game : MonoBehaviour
 	public void Start()
 	{
 		int i = 0;
-		
-		while (true)
-		{
+
+		while (true) {
 			string path = SceneUtility.GetScenePathByBuildIndex(i);
-			
-			if (string.IsNullOrEmpty(path))
-			{
+
+			if (string.IsNullOrEmpty(path)) {
 				break;
 			}
 
 			string sceneName = Path.GetFileNameWithoutExtension(path);
 			int ind = sceneName.IndexOf(LevelPrefix, StringComparison.Ordinal);
-			
-			if (ind >= 0)
-			{
+
+			if (ind >= 0) {
 				_levels[sceneName.Substring(ind + LevelPrefix.Length)] = i;
 			}
 
@@ -59,42 +55,49 @@ public class Game : MonoBehaviour
 		StartLevel("Intro");
 	}
 
-	public void StartLevel(string level)
+	public void StartLevel(string level, object levelParams = null)
 	{
-		StartCoroutine(LoadLevelCrt(level));
+		StartCoroutine(LoadLevelCrt(level, levelParams));
 	}
 
 	public void QuitGame()
 	{
+		StartCoroutine(QuitGameCrt());
+	}
+
+	private IEnumerator<YieldInstruction> QuitGameCrt()
+	{
+		if (CurtainUp) {
+			yield return StartCoroutine(CurtainDownCrt());
+		}
+
 #if UNITY_EDITOR
 		EditorApplication.isPlaying = false;
 #else
 		Application.Quit();
 #endif
 	}
-	
-	private IEnumerator<YieldInstruction> LoadLevelCrt(string level)
+
+	private IEnumerator<YieldInstruction> LoadLevelCrt(string level, object levelParams)
 	{
-		if (_curtainCanvas.alpha == 0)
-		{
+		if (CurtainUp) {
 			yield return StartCoroutine(CurtainDownCrt());
 		}
 
+		LevelParams = levelParams;
 		yield return SceneManager.LoadSceneAsync(_levels[level]);
 		yield return StartCoroutine(CurtainUpCrt());
 	}
-	
+
 	private IEnumerator<YieldInstruction> CurtainUpCrt()
 	{
 		float startTime = Time.time;
 		float endTime = startTime + TransitionTime;
-		
-		while (true)
-		{
+
+		while (true) {
 			float now = Time.time;
 
-			if (now >= endTime)
-			{
+			if (now >= endTime) {
 				break;
 			}
 
@@ -105,26 +108,24 @@ public class Game : MonoBehaviour
 		_curtainCanvas.blocksRaycasts = false;
 		_curtainCanvas.alpha = 0;
 	}
-	
+
 	private IEnumerator<YieldInstruction> CurtainDownCrt()
 	{
 		_curtainCanvas.blocksRaycasts = true;
 		float startTime = Time.time;
 		float endTime = startTime + TransitionTime;
-		
-		while (true)
-		{
+
+		while (true) {
 			float now = Time.time;
 
-			if (now >= endTime)
-			{
+			if (now >= endTime) {
 				break;
 			}
 
 			_curtainCanvas.alpha = (now - startTime) / TransitionTime;
 			yield return new WaitForSeconds(0);
 		}
-		
+
 		_curtainCanvas.alpha = 1;
 	}
 }

@@ -23,7 +23,9 @@ public class DroneController : MonoBehaviour
 
 	[Header("Drone Settings")]
 	public float MaxVelocity = 5;
-	public float Acceleration = 1f;
+	public float ForwardAcceleration = 1f;
+	public float BackwardAcceleration = 1f;
+	public float StrafeAcceleration = 1f;
 	public float NoInputDampening = 0.1f;
 
 	//public AnimationCurve MouseInputRotationRateCurve = AnimationCurve.Linear(0, 0, 1, 1);
@@ -39,11 +41,16 @@ public class DroneController : MonoBehaviour
 	public Vector2 RotationRateExtraVisualRotateScale = Vector2.one * 0.1f;
 
 	[Header("Stats")]
-	public float Velocity;
+	public Vector3 Velocity;
+	public float VelocityMagnitude;
 
 	[HideInInspector]
 	public Vector2 RotationRate;
 	public float RotationRateMagnitude;
+
+	[HideInInspector]
+	public Vector3 Acceleration;
+	public float AccelerationMagnitude;
 
 	// Start is called before the first frame update
 	void Start()
@@ -66,22 +73,62 @@ public class DroneController : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void FixedUpdate()
+	void Update()
 	{
-		ProcessOrientation(input);
+		bool input = Input.GetMouseButton(0);
 
-		float accel = input ? Acceleration : (-Velocity * NoInputDampening);
-		Velocity = Mathf.Clamp(Velocity + accel * Time.fixedDeltaTime, 0, MaxVelocity);
-		if (Velocity < 0.01f)
-			Velocity = 0;
-		transform.position += Velocity * Time.fixedDeltaTime * transform.forward;
+		if (input)
+			noInputTime = 0;
+		else
+			noInputTime += Time.deltaTime;
+
+		if (input)
+			noInputRotationRateRef = RotationRate.magnitude;
+
+
+		float deltaT = Time.deltaTime;
+
+		ProcessOrientation(input, deltaT);
+
+		Vector3 Acceleration = Vector3.zero;
+
+		if (Input.GetKey(KeyCode.W)) {
+			Acceleration += transform.forward * ForwardAcceleration ;
+		}
+		if (Input.GetKey(KeyCode.S)) {
+			Acceleration -= transform.forward * BackwardAcceleration;
+		}
+		if (Input.GetKey(KeyCode.A)) {
+			Acceleration -= transform.right * StrafeAcceleration;
+		}
+		if (Input.GetKey(KeyCode.D)) {
+			Acceleration += transform.right * StrafeAcceleration;
+		}
+
+		if (Acceleration == Vector3.zero) {
+			Acceleration = (-Velocity * NoInputDampening);
+			MovementActivateObject.SetActive(false);
+		} else {
+			Acceleration = Acceleration.normalized * Mathf.Clamp(Acceleration.magnitude, 0, ForwardAcceleration);
+			MovementActivateObject.SetActive(true);
+		}
+
+		AccelerationMagnitude = Acceleration.magnitude;
+
+		Velocity += Acceleration * deltaT;
+		VelocityMagnitude = Mathf.Clamp(Velocity.magnitude, 0, MaxVelocity);
+		if (VelocityMagnitude < 0.01f)
+			VelocityMagnitude = 0;
+
+		Velocity = Velocity.normalized * VelocityMagnitude;
+
+		transform.position += Velocity * deltaT;
 	}
 
 	float noInputTime = 0;
 	float noInputRotationRateRef;
-	bool input = false;
 
-	private void ProcessOrientation(bool input)
+	private void ProcessOrientation(bool input, float deltaT)
 	{
 		if (input) {
 			Vector2 mouseMov = GetMouseMovement();
@@ -93,14 +140,13 @@ public class DroneController : MonoBehaviour
 			if (diff.magnitude < RotationRateAccel * Time.fixedDeltaTime)
 				RotationRate = desiredRotationRate;
 			else
-				RotationRate += diff.normalized * RotationRateAccel * Time.fixedDeltaTime;
+				RotationRate += diff.normalized * RotationRateAccel * deltaT;
 
 			float length = RotationRate.magnitude;
 			length = Mathf.Clamp(RotationRate.magnitude, 0, MaxRotationRate);
 			RotationRate = RotationRate.normalized * length;
 		} else {
-			RotationRate = (1.0f - NoInputRotationRateDampeningCurve.Evaluate(noInputTime / NoInputRotationRateDampeningTime)) * noInputRotationRateRef
-				* RotationRate.normalized;
+			RotationRate = (1.0f - NoInputRotationRateDampeningCurve.Evaluate(noInputTime / NoInputRotationRateDampeningTime)) * noInputRotationRateRef * RotationRate.normalized;
 		}
 
 
@@ -111,31 +157,19 @@ public class DroneController : MonoBehaviour
 
 		if (RotationRate != Vector2.zero) {
 			Vector3 rot = new Vector3(RotationRate.x, RotationRate.y, 0);
-			rot *= Time.fixedDeltaTime;
+			rot *= deltaT;
 			transform.Rotate(rot);
 		}
 
 		ShipVisual.transform.localRotation = Quaternion.Euler(new Vector3(RotationRate.x * RotationRateExtraVisualRotateScale.y, RotationRate.y * RotationRateExtraVisualRotateScale.x, 0));
 	}
 
+	Quaternion camRotation = Quaternion.identity;
 
-
-	private void Update()
+	private void LateUpdate()
 	{
-		input = Input.GetMouseButton(0);
-
-		MovementActivateObject.SetActive(input);
-
-		if (input)
-			noInputTime = 0;
-		else
-			noInputTime += Time.deltaTime;
-
-		if (Input.GetMouseButtonUp(0))
-			noInputRotationRateRef = RotationRate.magnitude;
-
 		Vector3 offset = Vector3.zero;
-		float extraDistanceShift = MaxVelocityDistanceShiftCurve.Evaluate(Velocity / MaxVelocity) * MaxVelocityDistanceShift;
+		float extraDistanceShift = MaxVelocityDistanceShiftCurve.Evaluate(VelocityMagnitude / MaxVelocity) * MaxVelocityDistanceShift;
 		float distance = Distance + extraDistanceShift;
 		offset += -transform.forward * distance;
 
@@ -143,9 +177,12 @@ public class DroneController : MonoBehaviour
 
 		offset += transform.up * verticalShift;
 		Camera.transform.position = transform.position + offset;
-		Camera.transform.rotation = transform.rotation;
 
-		// TODO: Dampening/Curve for rotation vertor shifting
+		//var targetRotation = transform.rotation;
+		//camRotation = Quaternion.Slerp(camRotation, targetRotation, Time.deltaTime * 3);
+		//Camera.transform.rotation = camRotation;
+
+		Camera.transform.rotation = transform.rotation;
 		Camera.transform.Rotate(new Vector3(RotationRate.x * RotationRateOffsetScale.y, RotationRate.y * RotationRateOffsetScale.x, 0));
 	}
 }

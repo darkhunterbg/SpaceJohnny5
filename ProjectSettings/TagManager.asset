@@ -13,11 +13,11 @@ TagManager:
   - UI
   - 
   - 
-  - ScenePostProcessing
-  - 
-  - 
-  - 
-  - 
+  - LevelBounds
+  - Obstacles
+  - PowerUps
+  - Parts
+  - Drone
   - 
   - 
   - 
