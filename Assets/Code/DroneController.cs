@@ -16,15 +16,13 @@ public class DroneController : MonoBehaviour
 	[Header("Drone Settings")]
 	public float MaxVelocity = 5;
 	public float Acceleration = 1f;
-	public float NoInputAcceleration = -5f;
+	public float NoInputDampening = 0.1f;
 
+	//public AnimationCurve MouseInputRotationRateCurve = AnimationCurve.Linear(0, 0, 1, 1);
+	public float MaxRotationRate = 100;
+	public float RotationRateAccel = 50;
 
-	public AnimationCurve MouseInputRotationRateCurve = AnimationCurve.Linear(0, 0, 1, 1);
-	public float MouseInputMaxRotationRate = 100;
-
-	public AnimationCurve NoInputRotationRateCurve = AnimationCurve.Linear(0, 0, 1, 1);
-	public float NoInputRotationRateCurveSize = 10;
-	public float NoInputRotationRate = -100;
+	public float NoInputRotationRateDampening = 0.5f;
 
 	[Header("Stats")]
 	public float Velocity;
@@ -42,44 +40,55 @@ public class DroneController : MonoBehaviour
 	}
 
 	// Update is called once per frame
-	void Update()
+	void FixedUpdate()
 	{
 		bool input = Input.GetMouseButton(0);
 
 		MovementActivateObject.SetActive(input);
 
+		ProcessOrientation();
+
+		float accel = input ? Acceleration : (-Velocity * NoInputDampening) ;
+		Velocity = Mathf.Clamp(Velocity + accel * Time.fixedDeltaTime, 0, MaxVelocity);
+		if (Velocity < 0.01f)
+			Velocity = 0;
+		transform.position += Velocity * Time.fixedDeltaTime * transform.forward;
+	}
+
+	private void ProcessOrientation()
+	{
+		bool input = Input.GetMouseButton(0);
+
+		Vector2 rotAccel = (-RotationRate * NoInputRotationRateDampening);
+		float maxRotRate = MaxRotationRate;
 
 		if (input) {
 			Vector2 mousePosLinear = NormalizedMousePos() * 2.0f - Vector2.one;
-			float actualLength = MouseInputRotationRateCurve.Evaluate(mousePosLinear.magnitude) * MouseInputMaxRotationRate;
 
-			Vector2 rotAccel = mousePosLinear.normalized * actualLength;
-			RotationRate = new Vector2(-rotAccel.y, rotAccel.x) * Time.deltaTime;
+			rotAccel = mousePosLinear.normalized * RotationRateAccel;
+			rotAccel = new Vector2(-rotAccel.y, rotAccel.x);
 
-			//	ShipVisual.transform.localRotation = Quaternion.identity;
-			//	ShipVisual.transform.Rotate(new Vector3(-mouseOffset.y * 30, mouseOffset.x * 30, 0));
-		} else {
-			float s = RotationRate.magnitude / NoInputRotationRateCurveSize;
-			float rr = NoInputRotationRateCurve.Evaluate(s) * NoInputRotationRate;
-
-			float length = Mathf.Max(0, RotationRate.magnitude + rr * Time.deltaTime);
-			RotationRate = RotationRate.normalized * length;
-			if (RotationRate.magnitude < 1.0f)
-				RotationRate = Vector2.zero;
+			maxRotRate = Mathf.Min(mousePosLinear.magnitude * MaxRotationRate, MaxRotationRate);
 		}
+	
+
+		RotationRate += rotAccel * Time.fixedDeltaTime;
+		float length = Mathf.Clamp(RotationRate.magnitude, 0, maxRotRate);
+		RotationRate = RotationRate.normalized * length;
+		if (RotationRate.magnitude < 1.0f)
+			RotationRate = Vector2.zero;
 
 		if (RotationRate != Vector2.zero) {
 			Vector3 rot = new Vector3(RotationRate.x, RotationRate.y, 0);
-			rot *= Time.deltaTime;
+			rot *= Time.fixedDeltaTime;
 			transform.Rotate(rot);
 		}
 
-		float accel = input ? Acceleration : NoInputAcceleration;
-		Velocity = Mathf.Clamp(Velocity + accel * Time.deltaTime, 0, MaxVelocity);
-		transform.position += Velocity * Time.deltaTime * transform.forward;
+		//ShipVisual.transform.localRotation = Quaternion.Euler(new Vector3(RotationRate.x, RotationRate.y, 0));
+		//ShipVisual.transform.Rotate(new Vector3(-mouseOffset.y * 30, mouseOffset.x * 30, 0));
 	}
 
-	private void LateUpdate()
+	private void Update()
 	{
 		bool input = Input.GetMouseButton(0);
 		Vector2 mouseOffset = Vector2.zero;

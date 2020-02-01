@@ -5236,58 +5236,11 @@ MonoBehaviour:
   Distance: 5
   VerticalShift: 1.85
   MaxVelocity: 10
-  Acceleration: 5
-  NoInputAcceleration: -5
-  MouseInputRotationRateCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 1
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  MouseInputMaxRotationRate: 10000
-  NoInputRotationRateCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  NoInputRotationRate: -100
+  Acceleration: 10
+  NoInputDampening: 4
+  MaxRotationRate: 100
+  RotationRateAccel: 100
+  NoInputRotationRateDampening: 4
   Velocity: 0
   RotationRate: {x: 0, y: 0}
 --- !u!1 &931227856
