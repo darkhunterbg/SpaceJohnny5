@@ -247,5 +247,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c6b59fa0ef3eb74aae413b0ee67857b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Skybox: {fileID: 2100000, guid: b13109bc4674dd24ebc04b7c12437ad6, type: 2}
-  ambientColor: {r: 0.25711998, g: 0.509434, b: 0.36098364, a: 0}
+  Skybox: {fileID: 2100000, guid: 8401881fcb9afd34eb383fc90bbbbddc, type: 2}
+  ambientColor: {r: 0.3490566, g: 0.14324494, b: 0.22140127, a: 0}

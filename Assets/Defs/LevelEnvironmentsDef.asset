@@ -15,3 +15,4 @@ MonoBehaviour:
   EnvironmentVariants:
   - {fileID: 2965974385667573193, guid: 9e5161462f7ed4c40bf88ddc776a0e5e, type: 3}
   - {fileID: 7083358598922414567, guid: 946374cd3006f794bb68a0edb7adf454, type: 3}
+  - {fileID: 1364935559072624484, guid: b938c52194866ed4b947f4ddf8fe3c03, type: 3}
