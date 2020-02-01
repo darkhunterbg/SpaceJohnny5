@@ -8,8 +8,11 @@ public class GameLevel : MonoBehaviour
 	
 	private float _levelStartTime;
 
+	public DroneController Drone { get; private set; }
+
 	public void Start()
 	{
 		_levelStartTime = Time.time;
+		Drone = FindObjectOfType<DroneController>();
 	}
 }

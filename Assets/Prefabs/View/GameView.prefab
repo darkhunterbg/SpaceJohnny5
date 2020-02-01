@@ -607,7 +607,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DroneBatteryText: {fileID: 2089156140884549047}
   TimeElapsedText: {fileID: 3582363266730297663}
-  MovementCursor: {fileID: 1625572182395741318}
+  MovementCursor: {fileID: 177535804209812652}
 --- !u!1001 &364564205244439896
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -727,18 +727,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e121fb4f6a50dc548bf19ed899c58907, type: 3}
---- !u!1 &1625572182395741318 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1405123629319895518, guid: e121fb4f6a50dc548bf19ed899c58907,
-    type: 3}
-  m_PrefabInstance: {fileID: 364564205244439896}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &2038795596235798845 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1820704379081663589, guid: e121fb4f6a50dc548bf19ed899c58907,
     type: 3}
   m_PrefabInstance: {fileID: 364564205244439896}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &177535804209812652 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 538614364311914996, guid: e121fb4f6a50dc548bf19ed899c58907,
+    type: 3}
+  m_PrefabInstance: {fileID: 364564205244439896}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbde7e1710ca7cf4ba4cd20d7f5756e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6491440665895142343
 PrefabInstance:
   m_ObjectHideFlags: 0

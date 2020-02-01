@@ -9,7 +9,7 @@ public class GameView : MonoBehaviour
 
 	private GameLevel _gameLevel;
 
-	public GameObject MovementCursor;
+	public GameCursor MovementCursor;
 
 	private Canvas _canvas;
 
@@ -17,6 +17,8 @@ public class GameView : MonoBehaviour
 	{
 		_canvas = GetComponent<Canvas>();
 		_gameLevel = FindObjectOfType<GameLevel>();
+
+		MovementCursor.Init(_gameLevel, _canvas);
 	}
 
 	public void OnTestVictoryButtonPressed()
@@ -45,13 +47,6 @@ public class GameView : MonoBehaviour
 		Cursor.lockState = mouseInput ? CursorLockMode.Confined : CursorLockMode.None;
 		Cursor.visible = !mouseInput;
 
-
 		MovementCursor.gameObject.SetActive(!Cursor.visible);
-
-		if (MovementCursor.gameObject.activeSelf) {
-			Vector2 pos;
-			RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)_canvas.transform, Input.mousePosition, _canvas.worldCamera, out pos);
-			((RectTransform)MovementCursor.transform).position = _canvas.transform.TransformPoint(pos);
-		}
 	}
 }
