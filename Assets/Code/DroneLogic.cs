@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class DroneLogic : MonoBehaviour
@@ -8,12 +8,12 @@ public class DroneLogic : MonoBehaviour
 	public bool Dead => _batteryRemaining <= 0;
 
 	public float BatteryRemaining => _batteryRemaining;
-	private float _batteryRemaining; // percentage 0..100
+	private float _batteryRemaining = 100; // percentage 0..100
 	private GameLevel _gameLevel;
+	private List<PartLogic> _parts = new List<PartLogic>();
 	
 	private void Start()
 	{
-		_batteryRemaining = 100;
 		_gameLevel = FindObjectOfType<GameLevel>();
 	}
 
@@ -75,6 +75,20 @@ public class DroneLogic : MonoBehaviour
 
 	private void PickupPart(GameObject part)
 	{
+		var partLogic = part.GetComponent<PartLogic>();
+
+		if (_parts.Contains(partLogic)) {
+			// Already attached
+			return;
+		}
+		
+		if (_parts.Count == 0) {
+			partLogic.Attach(transform);	
+		} else {
+			partLogic.Attach(_parts[_parts.Count - 1].transform);
+		}
+		
+		_parts.Add(partLogic);
 	}
 
 	private void DrainBattery(float amount, bool damage)

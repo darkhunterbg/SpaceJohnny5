@@ -11,6 +11,8 @@ public class GameView : MonoBehaviour
 
 	public GameCursor MovementCursor;
 
+	public SSGUIObject GravityWellWarning;
+
 	private Canvas _canvas;
 
 	private void Start()
