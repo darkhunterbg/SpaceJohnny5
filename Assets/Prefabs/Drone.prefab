@@ -163,7 +163,7 @@ MonoBehaviour:
   StrafeAcceleration: 3
   NoInputDampening: 4
   MaxRotationRate: 90
-  RotationRateAccel: 100
+  RotationRateAccel: 200
   NoInputRotationRateDampeningCurve:
     serializedVersion: 2
     m_Curve:
