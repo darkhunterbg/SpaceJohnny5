@@ -4861,11 +4861,13 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  VeriticalShiftMaxRotationRateReducing: 1
+  VeriticalShiftMaxRotationRateReducing: 0
   MouseMovementDeadZone: 0.05
   MouseMovementMaxZone: 0.7
   MaxVelocity: 10
-  Acceleration: 10
+  ForwardAcceleration: 10
+  BackwardAcceleration: 5
+  StrafeAcceleration: 3
   NoInputDampening: 4
   MaxRotationRate: 90
   RotationRateAccel: 100
@@ -4896,9 +4898,12 @@ MonoBehaviour:
   NoInputRotationRateDampeningTime: 1
   RotationRateMouseInputAccelMultiplier: 2
   RotationRateExtraVisualRotateScale: {x: 0.3, y: 0.3}
-  Velocity: 0
+  Velocity: {x: 0, y: 0, z: 0}
+  VelocityMagnitude: 0
   RotationRate: {x: 0, y: 0}
   RotationRateMagnitude: 0
+  Acceleration: {x: 0, y: 0, z: 0}
+  AccelerationMagnitude: 0
 --- !u!1 &7504337634468531095
 GameObject:
   m_ObjectHideFlags: 0
