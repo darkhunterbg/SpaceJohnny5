@@ -4796,6 +4796,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7504337634304681764}
   - component: {fileID: 7504337634304681765}
+  - component: {fileID: 5691253797995674750}
+  - component: {fileID: -3320981653888869128}
   m_Layer: 0
   m_Name: Drone
   m_TagString: Untagged
@@ -4899,6 +4901,30 @@ MonoBehaviour:
   Velocity: 0
   RotationRate: {x: 0, y: 0}
   RotationRateMagnitude: 0
+--- !u!114 &5691253797995674750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7504337634304681771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84bee7800f8d49b49a0cf32a39d05d1b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &-3320981653888869128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7504337634304681771}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e71d563e61e748df997ed952ed20e7ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7504337634468531095
 GameObject:
   m_ObjectHideFlags: 0

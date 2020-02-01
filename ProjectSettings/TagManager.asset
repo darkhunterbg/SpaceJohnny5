@@ -13,11 +13,11 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - LevelBounds
+  - Obstacles
+  - PowerUps
+  - Parts
+  - Drone
   - 
   - 
   - 

@@ -61,4 +61,3 @@ crashlytics-build.properties
 # Rider crap
 .idea
 *.DotSettings
-Assets/Plugins/Editor/JetBrains*
