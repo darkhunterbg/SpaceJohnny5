@@ -5,29 +5,27 @@ public class DroneLogic : MonoBehaviour
 {
 	public delegate void OnBatteryChangedCallback(float amount, float battery, bool damage);
 	public event OnBatteryChangedCallback OnBatteryChanged;
-	public bool Dead => _batteryRemaining <= 0;
 
+	public float ThrustersBatteryDrain = 1.0f;
+	
+	public bool Dead => _batteryRemaining <= 0;
 	public float BatteryRemaining => _batteryRemaining;
 	private float _batteryRemaining = 100; // percentage 0..100
-	private GameLevel _gameLevel;
-	private List<PartLogic> _parts = new List<PartLogic>();
+	
+	private DroneController _droneController;
+	private readonly List<PartLogic> _parts = new List<PartLogic>();
 	
 	private void Start()
 	{
-		_gameLevel = FindObjectOfType<GameLevel>();
+		_droneController = GetComponent<DroneController>();
 	}
 
-	public void DrainBattery(float amount) // percentage 0..100
-	{
-		DrainBattery(amount, damage: false);
-	}
-
-	public void Damage(float amount) // percentage 0..100
+	private void Damage(float amount) // percentage 0..100
 	{
 		DrainBattery(amount, damage: true);
 	}
 
-	public void ChargeBattery(float amount) // percentage 0..100
+	private void ChargeBattery(float amount) // percentage 0..100
 	{
 		if (Dead) {
 			return;
@@ -41,7 +39,7 @@ public class DroneLogic : MonoBehaviour
 		}
 	}
 	
-	public void OnCollisionEnter(Collision other)
+	private void OnCollisionEnter(Collision other)
 	{
 		if (!other.collider.enabled) {
 			return;
@@ -60,7 +58,7 @@ public class DroneLogic : MonoBehaviour
 				break;
 			
 			case "Ship":
-				DropParts(other.gameObject);
+				DeliverParts(other.gameObject);
 				break;
 			
 			case "Battery":
@@ -69,8 +67,12 @@ public class DroneLogic : MonoBehaviour
 		}
 	}
 
-	private void DropParts(GameObject ship)
+	private void DeliverParts(GameObject ship)
 	{
+		if (_parts.Count > 0) {
+			_parts[0].Attach(ship.transform);
+			_parts.Clear();
+		}
 	}
 
 	private void PickupPart(GameObject part)
@@ -102,10 +104,14 @@ public class DroneLogic : MonoBehaviour
 		
 		if (_batteryRemaining <= 0) {
 			_batteryRemaining = 0;
+			var ship = FindObjectOfType<ShipLogic>();
+			var gameLevel = FindObjectOfType<GameLevel>();
 			
 			var gameResult = new GameResult {
 				Type = damage ? GameResultType.Destroyed : GameResultType.BatteryDepleted,
-				Time = _gameLevel.TimeElapsed,
+				Time = gameLevel.TimeElapsed,
+				PartsReceived = ship.PartsReceived,
+				PartsTotal = ship.PartsTotal,
 			};
 			
 			Die(gameResult);
@@ -117,5 +123,12 @@ public class DroneLogic : MonoBehaviour
 		// TODO Explode drone if needed
 		// TODO Wait couple of seconds
 		Game.Instance.StartLevel("Defeat", result);
+	}
+
+	private void Update()
+	{
+		if (_droneController.ThrustersActive) {
+			DrainBattery(ThrustersBatteryDrain * Time.deltaTime, damage: false);
+		}
 	}
 }

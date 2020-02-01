@@ -62,7 +62,8 @@ public class DroneController : MonoBehaviour
 	public DroneControllerState State;
 
 	public Vector3 PrevPosition;
-
+	public bool ThrustersActive;
+	
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -189,27 +190,30 @@ public class DroneController : MonoBehaviour
 
 		bool leftState = false;
 		bool rightState = false;
-
+		ThrustersActive = false;
 
 		Acceleration = Vector3.zero;
 		if (Input.GetKey(KeyCode.W)) {
 			Acceleration += transform.forward * ForwardAcceleration;
 			leftState = true;
 			rightState = true;
+			ThrustersActive = true;
 		}
 		if (Input.GetKey(KeyCode.S)) {
 			Acceleration -= transform.forward * BackwardAcceleration;
 			leftState = true;
 			rightState = true;
+			ThrustersActive = true;
 		}
 		if (Input.GetKey(KeyCode.A)) {
 			Acceleration -= transform.right * StrafeAcceleration;
 			rightState = true;
-		
+			ThrustersActive = true;
 		}
 		if (Input.GetKey(KeyCode.D)) {
 			Acceleration += transform.right * StrafeAcceleration;
 			leftState = true;
+			ThrustersActive = true;
 		}
 
 #pragma warning disable 0618

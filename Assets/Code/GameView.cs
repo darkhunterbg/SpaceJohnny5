@@ -6,7 +6,8 @@ public class GameView : MonoBehaviour
 {
 	public Text DroneBatteryText;
 	public Text TimeElapsedText;
-
+	public Text PartsLeftText;
+	
 	private GameLevel _gameLevel;
 
 	public GameCursor MovementCursor;
@@ -37,6 +38,11 @@ public class GameView : MonoBehaviour
 		DroneBatteryText.text = $"Battery: {batteryRemaining:000.00}";
 	}
 
+	public void SetPartsLeft(int parts, int total)
+	{
+		PartsLeftText.text = $"Pars: {parts}/{total}";
+	}
+	
 	private void Update()
 	{
 		TimeSpan timeElapsed = TimeSpan.FromSeconds(_gameLevel.TimeElapsed);
