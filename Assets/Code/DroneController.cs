@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum DroneControllerState
+{
+	FreeControl,
+	Hit
+}
+
 public class DroneController : MonoBehaviour
 {
 	public Camera Camera;
@@ -37,10 +43,12 @@ public class DroneController : MonoBehaviour
 
 	public float RotationRateMouseInputAccelMultiplier = 1;
 
+
 	[Header("Other")]
 	public Vector2 RotationRateExtraVisualRotateScale = Vector2.one * 0.1f;
 
 	[Header("Stats")]
+	[HideInInspector]
 	public Vector3 Velocity;
 	public float VelocityMagnitude;
 
@@ -52,10 +60,27 @@ public class DroneController : MonoBehaviour
 	public Vector3 Acceleration;
 	public float AccelerationMagnitude;
 
+	public DroneControllerState State;
+
+	public Vector3 PrevPosition;
+
 	// Start is called before the first frame update
 	void Start()
 	{
 
+	}
+
+	private void OnGUI()
+	{
+		if(GUI.Button(new Rect(0,0,100,20), "Hit Test")) {
+			ApplyHit(new Vector3(100, 0,0));
+		}
+	}
+
+	public void ApplyHit(Vector3 impulse)
+	{
+		State = DroneControllerState.Hit;
+		Velocity += impulse;
 	}
 
 	Vector2 GetMouseMovement()
@@ -75,35 +100,38 @@ public class DroneController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		bool input = Input.GetMouseButton(0);
+		if(State== DroneControllerState.Hit && Velocity.magnitude == 0) {
+			State = DroneControllerState.FreeControl;
+		}
 
-		if (input)
-			noInputTime = 0;
-		else
-			noInputTime += Time.deltaTime;
-
-		if (input)
-			noInputRotationRateRef = RotationRate.magnitude;
-
-
-		float deltaT = Time.deltaTime;
-
-		ProcessOrientation(input, deltaT);
-
+		float deltaT;
 		Vector3 Acceleration = Vector3.zero;
 
-		if (Input.GetKey(KeyCode.W)) {
-			Acceleration += transform.forward * ForwardAcceleration ;
+		bool mouseInput = false;
+
+		deltaT = Time.deltaTime;
+
+		if (State == DroneControllerState.FreeControl) {
+			mouseInput = ProcessInput(deltaT, ref Acceleration);
 		}
-		if (Input.GetKey(KeyCode.S)) {
-			Acceleration -= transform.forward * BackwardAcceleration;
+
+		if (!mouseInput) {
+			RotationRate = (1.0f - NoInputRotationRateDampeningCurve.Evaluate(noInputTime / NoInputRotationRateDampeningTime)) * noInputRotationRateRef * RotationRate.normalized;
 		}
-		if (Input.GetKey(KeyCode.A)) {
-			Acceleration -= transform.right * StrafeAcceleration;
+		if (RotationRate.magnitude < 0.1f)
+			RotationRate = Vector2.zero;
+
+		RotationRateMagnitude = RotationRate.magnitude;
+
+		if (RotationRate != Vector2.zero) {
+			Vector3 rot = new Vector3(RotationRate.x, RotationRate.y, 0);
+			rot *= deltaT;
+			transform.Rotate(rot);
 		}
-		if (Input.GetKey(KeyCode.D)) {
-			Acceleration += transform.right * StrafeAcceleration;
-		}
+
+		ShipVisual.transform.localRotation = Quaternion.Euler(new Vector3(RotationRate.x * RotationRateExtraVisualRotateScale.y, RotationRate.y * RotationRateExtraVisualRotateScale.x, 0));
+
+
 
 		if (Acceleration == Vector3.zero) {
 			Acceleration = (-Velocity * NoInputDampening);
@@ -116,20 +144,34 @@ public class DroneController : MonoBehaviour
 		AccelerationMagnitude = Acceleration.magnitude;
 
 		Velocity += Acceleration * deltaT;
-		VelocityMagnitude = Mathf.Clamp(Velocity.magnitude, 0, MaxVelocity);
+		VelocityMagnitude = Velocity.magnitude;
+
+		if (State == DroneControllerState.FreeControl) {
+			VelocityMagnitude = Mathf.Clamp(Velocity.magnitude, 0, MaxVelocity);
+		}
+
 		if (VelocityMagnitude < 0.01f)
 			VelocityMagnitude = 0;
 
 		Velocity = Velocity.normalized * VelocityMagnitude;
 
+		PrevPosition = transform.position;
+
 		transform.position += Velocity * deltaT;
 	}
 
-	float noInputTime = 0;
-	float noInputRotationRateRef;
-
-	private void ProcessOrientation(bool input, float deltaT)
+	private bool ProcessInput(float deltaT, ref Vector3 Acceleration)
 	{
+		bool input = Input.GetMouseButton(0);
+
+		if (input)
+			noInputTime = 0;
+		else
+			noInputTime += Time.deltaTime;
+
+		if (input)
+			noInputRotationRateRef = RotationRate.magnitude;
+
 		if (input) {
 			Vector2 mouseMov = GetMouseMovement();
 			mouseMov = new Vector2(-mouseMov.y, mouseMov.x);
@@ -145,24 +187,30 @@ public class DroneController : MonoBehaviour
 			float length = RotationRate.magnitude;
 			length = Mathf.Clamp(RotationRate.magnitude, 0, MaxRotationRate);
 			RotationRate = RotationRate.normalized * length;
-		} else {
-			RotationRate = (1.0f - NoInputRotationRateDampeningCurve.Evaluate(noInputTime / NoInputRotationRateDampeningTime)) * noInputRotationRateRef * RotationRate.normalized;
+		}
+
+		Acceleration = Vector3.zero;
+		if (Input.GetKey(KeyCode.W)) {
+			Acceleration += transform.forward * ForwardAcceleration;
+		}
+		if (Input.GetKey(KeyCode.S)) {
+			Acceleration -= transform.forward * BackwardAcceleration;
+		}
+		if (Input.GetKey(KeyCode.A)) {
+			Acceleration -= transform.right * StrafeAcceleration;
+		}
+		if (Input.GetKey(KeyCode.D)) {
+			Acceleration += transform.right * StrafeAcceleration;
 		}
 
 
-		if (RotationRate.magnitude < 0.1f)
-			RotationRate = Vector2.zero;
-
-		RotationRateMagnitude = RotationRate.magnitude;
-
-		if (RotationRate != Vector2.zero) {
-			Vector3 rot = new Vector3(RotationRate.x, RotationRate.y, 0);
-			rot *= deltaT;
-			transform.Rotate(rot);
-		}
-
-		ShipVisual.transform.localRotation = Quaternion.Euler(new Vector3(RotationRate.x * RotationRateExtraVisualRotateScale.y, RotationRate.y * RotationRateExtraVisualRotateScale.x, 0));
+		return input;
 	}
+
+	float noInputTime = 0;
+	float noInputRotationRateRef;
+
+
 
 	Quaternion camRotation = Quaternion.identity;
 
