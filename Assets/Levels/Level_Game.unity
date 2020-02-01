@@ -292,7 +292,7 @@ PrefabInstance:
     - target: {fileID: 7504337634304681764, guid: c16229ff250f18e4aa450bc4882d0e6e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.4478295
+      value: -15.65
       objectReference: {fileID: 0}
     - target: {fileID: 7504337634304681764, guid: c16229ff250f18e4aa450bc4882d0e6e,
         type: 3}
@@ -302,7 +302,7 @@ PrefabInstance:
     - target: {fileID: 7504337634304681764, guid: c16229ff250f18e4aa450bc4882d0e6e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.4825852
+      value: 9.94
       objectReference: {fileID: 0}
     - target: {fileID: 7504337634304681764, guid: c16229ff250f18e4aa450bc4882d0e6e,
         type: 3}
@@ -733,11 +733,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Ship
-      objectReference: {fileID: 0}
-    - target: {fileID: 7504337634468531095, guid: fcb6c8691fdf1e44f9346f396b176c2f,
-        type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fcb6c8691fdf1e44f9346f396b176c2f, type: 3}
