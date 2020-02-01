@@ -9,13 +9,13 @@ public class DroneView : MonoBehaviour
 	{
 		_gameView = FindObjectOfType<GameView>();
 		_droneLogic = GetComponent<DroneLogic>();
-		_droneLogic.OnBatteryDrained += OnDroneBatteryDrained;
+		_droneLogic.OnBatteryChanged += OnDroneBatteryChanged;
 		_gameView.SetDroneBatteryRemaining(_droneLogic.BatteryRemaining);
 	}
 
-	private void OnDroneBatteryDrained(float amount, float battery, bool damage)
+	private void OnDroneBatteryChanged(float amount, float battery, bool damage)
 	{
-		// TODO Show damage text
-		_gameView.SetDroneBatteryRemaining(Mathf.Clamp(battery - amount, 0, 100));
+		// TODO Show damage/charge text
+		_gameView.SetDroneBatteryRemaining(Mathf.Clamp(battery + amount, 0, 100));
 	}
 }
