@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7083358598922414565}
   - component: {fileID: 7083358598922414564}
-  - component: {fileID: 7170293953463563006}
+  - component: {fileID: 8028393273948540795}
   m_Layer: 13
   m_Name: PurpleGalaxyEnvironmentFX
   m_TagString: Untagged
@@ -49,7 +49,7 @@ MonoBehaviour:
   blendDistance: 0
   weight: 1
   priority: 0
---- !u!114 &7170293953463563006
+--- !u!114 &8028393273948540795
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -58,6 +58,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 7083358598922414567}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fe2775cab46d1542a25edb865b97dc2, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c6b59fa0ef3eb74aae413b0ee67857b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Skybox: {fileID: 2100000, guid: b13109bc4674dd24ebc04b7c12437ad6, type: 2}

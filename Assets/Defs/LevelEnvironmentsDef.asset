@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44a04408e7e490b4293f3884061922ab, type: 3}
   m_Name: LevelEnvironmentsDef
   m_EditorClassIdentifier: 
-  EnvironmentVariants: []
+  EnvironmentVariants:
+  - {fileID: 2965974385667573193, guid: 9e5161462f7ed4c40bf88ddc776a0e5e, type: 3}
+  - {fileID: 7083358598922414567, guid: 946374cd3006f794bb68a0edb7adf454, type: 3}
