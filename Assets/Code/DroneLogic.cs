@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class DroneLogic : MonoBehaviour
@@ -21,11 +22,39 @@ public class DroneLogic : MonoBehaviour
 		DrainBattery(amount, damage: false);
 	}
 
-	private void Damage(float amount) // percentage 0..100
+	public void Damage(float amount) // percentage 0..100
 	{
 		DrainBattery(amount, damage: true);
 	}
-	
+
+	public void OnCollisionEnter(Collision other)
+	{
+		string hitLayer = LayerMask.LayerToName(other.collider.gameObject.layer);
+		Debug.Log($"Collision: {LayerMask.LayerToName(other.collider.gameObject.layer)}");
+
+		switch (hitLayer) {
+			case "Obstacles":
+				Damage(20);
+				break;
+			
+			case "Parts":
+				PickupPart(other.gameObject);
+				break;
+			
+			case "Ship":
+				DropParts(other.gameObject);
+				break;
+		}
+	}
+
+	private void DropParts(GameObject ship)
+	{
+	}
+
+	private void PickupPart(GameObject part)
+	{
+	}
+
 	private void DrainBattery(float amount, bool damage)
 	{
 		if (Dead) {
