@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelEnvironmentInstance : MonoBehaviour
+public class LevelEnvironmentInstance
 {
 	private GameObject _instance;
 
