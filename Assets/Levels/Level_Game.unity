@@ -438,11 +438,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Drone
       objectReference: {fileID: 0}
-    - target: {fileID: 7504337634468531095, guid: c16229ff250f18e4aa450bc4882d0e6e,
-        type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c16229ff250f18e4aa450bc4882d0e6e, type: 3}
 --- !u!1 &1303569583
