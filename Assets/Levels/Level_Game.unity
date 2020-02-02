@@ -721,8 +721,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd7495e3463f23441b9b6bcb7de42d54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MinObjects: 4
-  MaxObjects: 4
+  MinObjects: 2
+  MaxObjects: 2
   SphereRadius: 50
   MinScale: 1
   MaxScale: 1
