@@ -19,10 +19,13 @@ public class DroneLogic : MonoBehaviour
 	private DroneController _droneController;
 	private readonly List<PartLogic> _parts = new List<PartLogic>();
 	public IList<PartLogic> Parts => _parts;
-	
+
+	private GameView _view;
+
 	private void Start()
 	{
 		_droneController = GetComponent<DroneController>();
+		_view = FindObjectOfType<GameView>();
 	}
 
 	private void Damage(float amount) // percentage 0..100
@@ -84,6 +87,7 @@ public class DroneLogic : MonoBehaviour
 	private void PickupPowerUp(GameObject powerUp)
 	{
 		ChargeBattery(20);
+		_view.PowerUpPicked(powerUp.GetComponent<PowerUpLogic>());
 		Destroy(powerUp);
 		BatteryPickUpAudio.Play();
 	}

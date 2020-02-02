@@ -19,7 +19,9 @@ public class GameView : MonoBehaviour
 	public SSGUIObject GravityWellWarningPrefab;
 	public SSGUIObject PartIndicatorPrefab;
 	public SSGUIObject ShipIndicatorPrefab;
+	public SSGUIObject BatteryIndicatorPrefab;
 
+	public float BatteryIndicatorAppearanceRange = 30;
 
 	private Canvas _canvas;
 
@@ -34,6 +36,15 @@ public class GameView : MonoBehaviour
 
 		foreach (var part in _gameLevel.Ship.Parts) {
 			SSGUIObject marker = GameObject.Instantiate(PartIndicatorPrefab, transform);
+			marker.Init(_canvas, _gameLevel.Drone.transform);
+			marker.TrackingObject = part.gameObject;
+			TrackingObjects.Add(marker);
+		}
+
+
+		foreach (var part in _gameLevel.PowerUps) {
+			SSGUIObject marker = GameObject.Instantiate(BatteryIndicatorPrefab, transform);
+			marker.gameObject.SetActive(false);
 			marker.Init(_canvas, _gameLevel.Drone.transform);
 			marker.TrackingObject = part.gameObject;
 			TrackingObjects.Add(marker);
@@ -79,6 +90,19 @@ public class GameView : MonoBehaviour
 		}
 	}
 
+	public void PowerUpPicked(PowerUpLogic powerUp)
+	{
+		if (powerUp == null)
+			return;
+
+		var marker = TrackingObjects.Find(p => p.TrackingObject == powerUp.gameObject);
+
+		if (marker != null) {
+			TrackingObjects.Remove(marker);
+			Destroy(marker.gameObject);
+		}
+	}
+
 	public void UpdatePartsInfo()
 	{
 		int partsCarried = _gameLevel.Drone.Parts.Count;
@@ -89,7 +113,7 @@ public class GameView : MonoBehaviour
 		//if (partsCarried == 0) {
 		//	PartsLeftText.text = $"{partsDelivered}/{partsTotal}";
 		//} else {
-			PartsLeftText.text = $"{partsCarried}/{partsRemaining}";
+		PartsLeftText.text = $"{partsCarried}/{partsRemaining}";
 		//}
 	}
 
@@ -105,19 +129,37 @@ public class GameView : MonoBehaviour
 
 		MovementCursor.gameObject.SetActive(!Cursor.visible);
 
-		foreach (var part in _gameLevel.Ship.Parts) {
-			//if (part.AttachedToShip) {
-
-			SSGUIObject marker = TrackingObjects.Find(p => p.TrackingObject == part.gameObject);
-			marker.gameObject.SetActive(!part.AttachedToAnything);
-			//}
-		}
-
-		SSGUIObject shipMarker = TrackingObjects.Find(p => p.TrackingObject == _gameLevel.Ship.gameObject);
-		shipMarker.gameObject.SetActive(_gameLevel.Drone.Parts.Any());
-
+		UpdatePartsIndicators();
+		UpdatePowerIndicators();
 		UpdateGravityWellMarkers();
 		UpdatePartsInfo();
+		UpdateShipIndicator();
+	}
+
+	private void UpdateShipIndicator()
+	{
+		SSGUIObject shipMarker = TrackingObjects.Find(p => p.TrackingObject == _gameLevel.Ship.gameObject);
+		shipMarker.gameObject.SetActive(_gameLevel.Drone.Parts.Any());
+	}
+
+	private void UpdatePartsIndicators()
+	{
+		foreach (var part in _gameLevel.Ship.Parts) {
+			SSGUIObject marker = TrackingObjects.Find(p => p.TrackingObject == part.gameObject);
+			marker.gameObject.SetActive(!part.AttachedToAnything);
+		}
+	}
+
+	private void UpdatePowerIndicators()
+	{
+		foreach (var powerUp in _gameLevel.PowerUps) {
+			bool inRange = (powerUp.transform.position - _gameLevel.Drone.transform.position).magnitude < BatteryIndicatorAppearanceRange;
+			SSGUIObject marker = TrackingObjects.Find(p => p.TrackingObject == powerUp.gameObject);
+
+			marker.gameObject.SetActive(inRange);
+		}
+
+
 	}
 
 	private void UpdateGravityWellMarkers()

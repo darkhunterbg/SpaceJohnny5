@@ -13,6 +13,7 @@ public class GameLevel : MonoBehaviour
 	public ShipLogic Ship { get; private set; }
 	private LevelEnvironmentInstance _levelEnvironmentInstnance;
 	public List<GravityWell> GravityWells { get; private set; } = new List<GravityWell>();
+	public List<PowerUpLogic> PowerUps { get; private set; } = new List<PowerUpLogic>();
 
 	public void Start()
 	{
@@ -20,5 +21,6 @@ public class GameLevel : MonoBehaviour
 		Drone = FindObjectOfType<DroneLogic>();
 		Ship = FindObjectOfType<ShipLogic>();
 		_levelEnvironmentInstnance = new LevelEnvironmentInstance(LevelEnvironmentsDef.SelecRandoEnvironment());
+		PowerUps.AddRange(FindObjectsOfType<PowerUpLogic>());
 	}
 }
