@@ -13,7 +13,7 @@ public class DroneController : MonoBehaviour
 	public ParticleSystem RightThruster;
 	public GameObject ShipVisual;
 	public AudioSource ThrustersAudio;
-	
+
 	[Header("Camera Settings")]
 
 	public float Distance;
@@ -29,10 +29,13 @@ public class DroneController : MonoBehaviour
 
 	[Header("Drone Settings")]
 	public float MaxVelocity = 5;
+	public float BoostVelocityMultiplier = 3;
 	public float ForwardAcceleration = 1f;
 	public float BackwardAcceleration = 1f;
 	public float StrafeAcceleration = 1f;
 	public float NoInputDampening = 0.1f;
+
+	public float BoostedMaxVelocity => MaxVelocity * BoostVelocityMultiplier;
 
 	//public AnimationCurve MouseInputRotationRateCurve = AnimationCurve.Linear(0, 0, 1, 1);
 	public float MaxRotationRate = 100;
@@ -66,20 +69,20 @@ public class DroneController : MonoBehaviour
 	public bool ThrustersActive;
 
 	private float VelocityChangedUntilTime;
-	private float VelocityMultiplier;
+
 
 	private float MaxVelocityIncludingMultiplier
 	{
 		get
 		{
 			if (Time.time < VelocityChangedUntilTime) {
-				return MaxVelocity * VelocityMultiplier;
+				return MaxVelocity * BoostVelocityMultiplier;
 			}
 
 			return MaxVelocity;
 		}
 	}
-	
+
 	// Start is called before the first frame update
 	void Start()
 	{
@@ -116,7 +119,7 @@ public class DroneController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if (State== DroneControllerState.Hit && Velocity.magnitude == 0) {
+		if (State == DroneControllerState.Hit && Velocity.magnitude == 0) {
 			State = DroneControllerState.FreeControl;
 		}
 
@@ -127,10 +130,9 @@ public class DroneController : MonoBehaviour
 
 		deltaT = Time.deltaTime;
 
-		if (State == DroneControllerState.FreeControl) {
 			mouseInput = ProcessInput(deltaT, ref Acceleration);
-		}
 		
+
 		if (!mouseInput) {
 			RotationRate = (1.0f - NoInputRotationRateDampeningCurve.Evaluate(noInputTime / NoInputRotationRateDampeningTime)) * noInputRotationRateRef * RotationRate.normalized;
 		}
@@ -147,18 +149,24 @@ public class DroneController : MonoBehaviour
 
 		ShipVisual.transform.localRotation = Quaternion.Euler(new Vector3(RotationRate.x * RotationRateExtraVisualRotateScale.y, RotationRate.y * RotationRateExtraVisualRotateScale.x, 0));
 
-		if (Acceleration == Vector3.zero) {
+		bool dampen = State == DroneControllerState.Hit || Acceleration == Vector3.zero || VelocityMagnitude > MaxVelocityIncludingMultiplier;
+
+		if (dampen) {
 			Acceleration = (-Velocity * NoInputDampening);
 		} else {
+
 			Acceleration = Acceleration.normalized * Mathf.Clamp(Acceleration.magnitude, 0, ForwardAcceleration);
 		}
 
 		AccelerationMagnitude = Acceleration.magnitude;
 
+
 		Velocity += Acceleration * deltaT;
 		VelocityMagnitude = Velocity.magnitude;
 
-		if (State == DroneControllerState.FreeControl) {
+
+		if (!dampen ) {
+
 			VelocityMagnitude = Mathf.Clamp(Velocity.magnitude, 0, MaxVelocityIncludingMultiplier);
 		}
 
@@ -186,74 +194,81 @@ public class DroneController : MonoBehaviour
 
 	private bool ProcessInput(float deltaT, ref Vector3 Acceleration)
 	{
-		bool input = Input.GetMouseButton(0);
+		bool input = false; 
 
-		if (input)
-			noInputTime = 0;
-		else
-			noInputTime += Time.deltaTime;
+		if (State == DroneControllerState.FreeControl) {
+			input = Input.GetMouseButton(0);
 
-		if (input)
-			noInputRotationRateRef = RotationRate.magnitude;
-
-		if (input) {
-			Vector2 mouseMov = GetMouseMovement();
-			mouseMov = new Vector2(-mouseMov.y, mouseMov.x);
-
-			Vector2 desiredRotationRate = mouseMov * MaxRotationRate;
-			Vector2 diff = desiredRotationRate - RotationRate;
-
-			if (diff.magnitude < RotationRateAccel * Time.fixedDeltaTime)
-				RotationRate = desiredRotationRate;
+			if (input)
+				noInputTime = 0;
 			else
-				RotationRate += diff.normalized * RotationRateAccel * deltaT;
+				noInputTime += Time.deltaTime;
 
-			float length = RotationRate.magnitude;
-			length = Mathf.Clamp(RotationRate.magnitude, 0, MaxRotationRate);
-			RotationRate = RotationRate.normalized * length;
+			if (input)
+				noInputRotationRateRef = RotationRate.magnitude;
+
+			if (input) {
+				Vector2 mouseMov = GetMouseMovement();
+				mouseMov = new Vector2(-mouseMov.y, mouseMov.x);
+
+				Vector2 desiredRotationRate = mouseMov * MaxRotationRate;
+				Vector2 diff = desiredRotationRate - RotationRate;
+
+				if (diff.magnitude < RotationRateAccel * Time.fixedDeltaTime)
+					RotationRate = desiredRotationRate;
+				else
+					RotationRate += diff.normalized * RotationRateAccel * deltaT;
+
+				float length = RotationRate.magnitude;
+				length = Mathf.Clamp(RotationRate.magnitude, 0, MaxRotationRate);
+				RotationRate = RotationRate.normalized * length;
+			}
+
 		}
-
 		bool leftState = false;
 		bool rightState = false;
 		ThrustersActive = false;
 
-		Acceleration = Vector3.zero;
-		if (Input.GetKey(KeyCode.W)) {
-			Acceleration += transform.forward * ForwardAcceleration;
-			leftState = true;
-			rightState = true;
-			ThrustersActive = true;
-		}
-		if (Input.GetKey(KeyCode.S)) {
-			Acceleration -= transform.forward * BackwardAcceleration;
-			leftState = true;
-			rightState = true;
-			ThrustersActive = true;
-		}
-		if (Input.GetKey(KeyCode.A)) {
-			Acceleration -= transform.right * StrafeAcceleration;
-			rightState = true;
-			ThrustersActive = true;
-		}
-		if (Input.GetKey(KeyCode.D)) {
-			Acceleration += transform.right * StrafeAcceleration;
-			leftState = true;
-			ThrustersActive = true;
+		if (State == DroneControllerState.FreeControl) {
+			Acceleration = Vector3.zero;
+			if (Input.GetKey(KeyCode.W)) {
+				Acceleration += transform.forward * ForwardAcceleration;
+				leftState = true;
+				rightState = true;
+				ThrustersActive = true;
+			}
+			if (Input.GetKey(KeyCode.S)) {
+				Acceleration -= transform.forward * BackwardAcceleration;
+				leftState = true;
+				rightState = true;
+				ThrustersActive = true;
+			}
+			if (Input.GetKey(KeyCode.A)) {
+				Acceleration -= transform.right * StrafeAcceleration;
+				rightState = true;
+				ThrustersActive = true;
+			}
+			if (Input.GetKey(KeyCode.D)) {
+				Acceleration += transform.right * StrafeAcceleration;
+				leftState = true;
+				ThrustersActive = true;
+			}
 		}
 
 #pragma warning disable 0618
-		if (leftState && !LeftThruster.enableEmission)
-			LeftThruster.enableEmission = true;
+			if (leftState && !LeftThruster.enableEmission)
+				LeftThruster.enableEmission = true;
 
-		if (!leftState && LeftThruster.enableEmission)
-			LeftThruster.enableEmission = false;
+			if (!leftState && LeftThruster.enableEmission)
+				LeftThruster.enableEmission = false;
 
-		if (rightState && !RightThruster.enableEmission)
-			RightThruster.enableEmission = true;
+			if (rightState && !RightThruster.enableEmission)
+				RightThruster.enableEmission = true;
 
-		if (!rightState && RightThruster.enableEmission)
-			RightThruster.enableEmission = false;
+			if (!rightState && RightThruster.enableEmission)
+				RightThruster.enableEmission = false;
 #pragma warning restore 0618
+		
 		return input;
 	}
 
@@ -267,7 +282,7 @@ public class DroneController : MonoBehaviour
 	private void LateUpdate()
 	{
 		Vector3 offset = Vector3.zero;
-		float extraDistanceShift = MaxVelocityDistanceShiftCurve.Evaluate(VelocityMagnitude / MaxVelocityIncludingMultiplier) * MaxVelocityDistanceShift;
+		float extraDistanceShift = MaxVelocityDistanceShiftCurve.Evaluate(VelocityMagnitude / MaxVelocity) * MaxVelocityDistanceShift;
 		float distance = Distance + extraDistanceShift;
 		offset += -transform.forward * distance;
 
@@ -284,9 +299,8 @@ public class DroneController : MonoBehaviour
 		Camera.transform.Rotate(new Vector3(RotationRate.x * RotationRateOffsetScale.y, RotationRate.y * RotationRateOffsetScale.x, 0));
 	}
 
-	public void IncreaseVelocityFor(float multiplier, float time)
+	public void IncreaseVelocityFor(float time)
 	{
 		VelocityChangedUntilTime = Time.time + time;
-		VelocityMultiplier = multiplier;
 	}
 }

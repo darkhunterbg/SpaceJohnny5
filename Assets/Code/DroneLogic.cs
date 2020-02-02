@@ -102,7 +102,7 @@ public class DroneLogic : MonoBehaviour
 				ChargeBattery(20);
 				break;
 			case PowerUpType.Speed:
-				_droneController.IncreaseVelocityFor(multiplier: 3f, time: 4);
+				_droneController.IncreaseVelocityFor(time: 4);
 				break;
 		}
 		

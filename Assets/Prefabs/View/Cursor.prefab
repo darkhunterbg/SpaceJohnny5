@@ -52,7 +52,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Indicator: {fileID: 5734839772078305815}
   Direction: {fileID: 5350293952641243094}
-  ArrowDistance: 100
+  ArrowDistance: 70
 --- !u!1 &5734839772078305815
 GameObject:
   m_ObjectHideFlags: 0
