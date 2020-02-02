@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
+
+[DefaultExecutionOrder(200)]
 public class SSGUIObject : MonoBehaviour
 {
 	public GameObject TrackingObject;
 
 	private Canvas _canvas;
 
-	public GameObject Visuals;
+	public GameObject OutOfSceenVisuals;
+	public GameObject OnScreenVisuals;
 
-	public GameObject RotateVisual;
-	public GameObject OrientatedVisual;
+	public Text DistanceText;
+
 
 	public void Init(Canvas canvas)
 	{
@@ -21,25 +25,36 @@ public class SSGUIObject : MonoBehaviour
 		if (TrackingObject == null)
 			return;
 
-		var camera = Camera.main; 
-		Vector2 ssPos = RectTransformUtility.WorldToScreenPoint(camera, TrackingObject.transform.position);
+		var camera = Camera.main;
+		Vector3 ssPos = camera.WorldToScreenPoint(TrackingObject.transform.position);
+
+		if (ssPos.z < 0) {
+			ssPos *= Vector2.one * -1;
+		}
 
 		Vector2 size = ((RectTransform)transform).rect.size;
 
-		bool outOfSceen = ssPos.x < 0 || ssPos.x > camera.pixelWidth || ssPos.y < 0 || ssPos.y > camera.pixelHeight;
+		bool outOfSceen = ssPos.z < 0 || ssPos.x < 0 || ssPos.x > camera.pixelWidth || ssPos.y < 0 || ssPos.y > camera.pixelHeight;
 
-		Visuals.SetActive(outOfSceen);
+		if (OutOfSceenVisuals != null)
+			OutOfSceenVisuals.SetActive(outOfSceen);
 
-		if (outOfSceen) {
+		if (OnScreenVisuals != null)
+			OnScreenVisuals.SetActive(!outOfSceen);
 
-			ssPos.x = Mathf.Clamp(ssPos.x, size.x / 2, camera.pixelWidth - size.x / 2);
-			ssPos.y = Mathf.Clamp(ssPos.y, size.y / 2, camera.pixelHeight - size.y / 2);
+		ssPos.x = Mathf.Clamp(ssPos.x, size.x / 2, camera.pixelWidth - size.x / 2);
+		ssPos.y = Mathf.Clamp(ssPos.y, size.y / 2, camera.pixelHeight - size.y / 2);
 
-			//RectTransformUtility.ScreenPointToLocalPointInRectangle((RectTransform)_canvas.transform, ssPos, camera, out pos);
+		((RectTransform)transform).position = ssPos;
 
-			((RectTransform)transform).position = ssPos;
+		if (outOfSceen && OutOfSceenVisuals != null) {
+			Vector2 norm = (new Vector2(ssPos.x, ssPos.y) - new Vector2(camera.pixelWidth, camera.pixelHeight) / 2).normalized;
 
-			
+			float rotAngle = Mathf.Atan2(norm.y, norm.x) * Mathf.Rad2Deg;// + Mathf.PI  ;
+			((RectTransform)OutOfSceenVisuals.transform).rotation = Quaternion.Euler(0, 0, rotAngle - 90);
+
+		} else if (OnScreenVisuals != null) {
+			DistanceText.text = (TrackingObject.transform.position - camera.transform.position).magnitude.ToString("0.0").Replace(',', '.');
 		}
 	}
 }

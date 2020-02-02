@@ -12,6 +12,8 @@ public class PartLogic : MonoBehaviour
 	private PartLogic _nextPart;
 	private Vector3 _velocity;
 	private ShipLogic _shipToAttachTo;
+
+	public bool AttachedToAnything => _followTarget != null;
 	
 	public void Attach(Transform followTarget)
 	{

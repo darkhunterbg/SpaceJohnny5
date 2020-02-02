@@ -16,6 +16,7 @@ public class DroneLogic : MonoBehaviour
 	
 	private DroneController _droneController;
 	private readonly List<PartLogic> _parts = new List<PartLogic>();
+	public IList<PartLogic> Parts => _parts;
 	
 	private void Start()
 	{
@@ -76,8 +77,12 @@ public class DroneLogic : MonoBehaviour
 	private void DeliverParts(GameObject ship)
 	{
 		if (_parts.Count > 0) {
+
+			GameLevel level = FindObjectOfType<GameLevel>();
 			_parts[0].Attach(ship.transform);
+
 			_parts.Clear();
+
 		}
 	}
 

@@ -612,6 +612,10 @@ MonoBehaviour:
   MovementCursor: {fileID: 177535804209812652}
   GravityWellWarningPrefab: {fileID: 3779765984992681956, guid: a46f250d82b40c54c990bfc6143e3eb9,
     type: 3}
+  PartIndicatorPrefab: {fileID: 3130054392602008196, guid: f3f13bbdd80839543a1849279f782c81,
+    type: 3}
+  ShipIndicatorPrefab: {fileID: 3130054392602008196, guid: 363b178a13bec984795e0cf2d053057e,
+    type: 3}
 --- !u!1001 &364564205244439896
 PrefabInstance:
   m_ObjectHideFlags: 0
