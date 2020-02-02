@@ -86,6 +86,7 @@ public class DroneLogic : MonoBehaviour
 	
 	private void HitObstacle(Collision other)
 	{
+		_view.ShowWarningMessage("-20 BATTERY");
 		Damage(20);
 		HurtAudio.Play();
 		Vector3 hitCenter = other.collider.bounds.center;
@@ -99,9 +100,11 @@ public class DroneLogic : MonoBehaviour
 
 		switch (powerUpLogic.Type) {
 			case PowerUpType.Battery:
+				_view.ShowWarningMessage("+20 BATTERY");
 				ChargeBattery(20);
 				break;
 			case PowerUpType.Speed:
+				_view.ShowWarningMessage("SPEED UP!");
 				_droneController.IncreaseVelocityFor(time: 4);
 				break;
 		}
@@ -115,6 +118,7 @@ public class DroneLogic : MonoBehaviour
 	private void DeliverParts(GameObject ship)
 	{
 		if (_parts.Count > 0) {
+			_view.ShowWarningMessage($"{_parts.Count} PART(S) DELIVERED");
 			_parts[0].Attach(ship.transform);
 			_parts.Clear();
 			DeliverPartAudio.Play();
@@ -129,6 +133,8 @@ public class DroneLogic : MonoBehaviour
 			// Already attached
 			return;
 		}
+		
+		_view.ShowWarningMessage($"PART PICKED UP");
 		
 		if (_parts.Count == 0) {
 			partLogic.Attach(transform);	

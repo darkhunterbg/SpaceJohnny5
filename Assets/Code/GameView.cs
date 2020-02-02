@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -46,8 +47,7 @@ public class GameView : MonoBehaviour
 			marker.TrackingObject = part.gameObject;
 			TrackingObjects.Add(marker);
 		}
-
-
+		
 		foreach (var part in _gameLevel.PowerUps) {
 			SSGUIObject marker = null;
 
@@ -65,6 +65,8 @@ public class GameView : MonoBehaviour
 		shipMarker.Init(_canvas, _gameLevel.Drone.transform);
 		shipMarker.TrackingObject = _gameLevel.Ship.gameObject;
 		TrackingObjects.Add(shipMarker);
+		
+		WarningGroup.SetActive(false);
 	}
 
 	private void OnDestroy()
@@ -128,6 +130,20 @@ public class GameView : MonoBehaviour
 		//}
 	}
 
+	public void ShowWarningMessage(string message)
+	{
+		WarningGroup.SetActive(true);
+		WarningText.text = message;
+		StopCoroutine(nameof(HideWarningMessageCrt));
+		StartCoroutine(nameof(HideWarningMessageCrt));
+	}
+
+	private IEnumerator HideWarningMessageCrt()
+	{
+		yield return new WaitForSeconds(3);
+		WarningGroup.SetActive(false);
+	}
+	
 	private void Update()
 	{
 		TimeSpan timeElapsed = TimeSpan.FromSeconds(_gameLevel.TimeElapsed);
