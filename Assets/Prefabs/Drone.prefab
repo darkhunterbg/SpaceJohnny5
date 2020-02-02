@@ -14502,20 +14502,20 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 0.18209095
+      outSlope: 0.18209095
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.08059994
     - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
+      time: 1.8135041
+      value: 2.5249505
+      inSlope: 2.0569608
+      outSlope: 2.0569608
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.034360364
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
@@ -14524,6 +14524,7 @@ MonoBehaviour:
   MouseMovementDeadZone: 0.05
   MouseMovementMaxZone: 0.7
   MaxVelocity: 10
+  BoostVelocityMultiplier: 3
   ForwardAcceleration: 10
   BackwardAcceleration: 5
   StrafeAcceleration: 3
