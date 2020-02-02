@@ -1,2 +1,2 @@
 # Space Johnny 5
-Global Game Jam 2020 from Sofia
+Entry for Global Game Jam 2020 from Sofia
