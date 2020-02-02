@@ -191,17 +191,19 @@ public class DroneLogic : MonoBehaviour
 			PartsDelivered = ship.PartsDelivered,
 			PartsTotal = ship.PartsTotal,
 		};
-		
-		foreach (var renderer in gameObject.GetComponentsInChildren<Renderer>()) {
+
+		/*foreach (var renderer in gameObject.GetComponentsInChildren<Renderer>()) {
 			renderer.enabled = false;
 		}
 
 		foreach (var light in gameObject.GetComponentsInChildren<Light>()) {
 			light.enabled = false;
-		}
-		
-		// TODO Explode drone if needed
-		
+		}*/
+
+#pragma warning disable 0618
+		_shockParticles.enableEmission = true;
+#pragma warning restore 0618
+
 		yield return new WaitForSeconds(5);
 		Game.Instance.StartLevel("Defeat", gameResult);
 	}
