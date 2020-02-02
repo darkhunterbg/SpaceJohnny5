@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,7 +30,7 @@ public class DroneLogic : MonoBehaviour
 		DrainBattery(amount, damage: true);
 	}
 
-	private void ChargeBattery(float amount, GameObject batteryObjects) // percentage 0..100
+	private void ChargeBattery(float amount) // percentage 0..100
 	{
 		if (Dead) {
 			return;
@@ -41,8 +42,6 @@ public class DroneLogic : MonoBehaviour
 		if (_batteryRemaining > 100) {
 			_batteryRemaining = 100;
 		}
-
-		Destroy(batteryObjects);
 	}
 	
 	private void OnCollisionEnter(Collision other)
@@ -56,8 +55,7 @@ public class DroneLogic : MonoBehaviour
 
 		switch (hitLayer) {
 			case "Obstacles":
-				Damage(20);
-				HurtAudio.Play();
+				HitObstacle(other);
 				break;
 			
 			case "Parts":
@@ -66,25 +64,33 @@ public class DroneLogic : MonoBehaviour
 			
 			case "Ship":
 				DeliverParts(other.gameObject);
-				DeliverPartAudio.Play();
 				break;
 			
 			case "PowerUps":
-				ChargeBattery(20, other.gameObject);
-				BatteryPickUpAudio.Play();
+				PickupPowerUp(other.gameObject);
 				break;
 		}
+	}
+	
+	private void HitObstacle(Collision other)
+	{
+		Damage(20);
+		HurtAudio.Play();
+	}
+
+	private void PickupPowerUp(GameObject powerUp)
+	{
+		ChargeBattery(20);
+		Destroy(powerUp);
+		BatteryPickUpAudio.Play();
 	}
 
 	private void DeliverParts(GameObject ship)
 	{
 		if (_parts.Count > 0) {
-
-			GameLevel level = FindObjectOfType<GameLevel>();
 			_parts[0].Attach(ship.transform);
-
 			_parts.Clear();
-
+			DeliverPartAudio.Play();
 		}
 	}
 
@@ -92,7 +98,7 @@ public class DroneLogic : MonoBehaviour
 	{
 		var partLogic = part.GetComponent<PartLogic>();
 
-		if (_parts.Contains(partLogic)) {
+		if (partLogic.AttachedToAnything) {
 			// Already attached
 			return;
 		}
@@ -109,9 +115,6 @@ public class DroneLogic : MonoBehaviour
 	private void DrainBattery(float amount, bool damage)
 	{
 		if (Dead) {
-			//in case that your battery dries out
-			EndLevel(damage);
-
 			return;
 		}
 		
@@ -133,20 +136,15 @@ public class DroneLogic : MonoBehaviour
 		{
 			Type = damage ? GameResultType.Destroyed : GameResultType.BatteryDepleted,
 			Time = gameLevel.TimeElapsed,
-			PartsReceived = ship.PartsReceived,
+			PartsDelivered = ship.PartsDelivered,
 			PartsTotal = ship.PartsTotal,
 		};
 
-		Die(gameResult);
-	}
-
-	private void Die(GameResult result)
-	{
 		// TODO Explode drone if needed
 		// TODO Wait couple of seconds
-		Game.Instance.StartLevel("Defeat", result);
+		Game.Instance.StartLevel("Defeat", gameResult);
 	}
-
+	
 	private void Update()
 	{
 		if (_droneController.ThrustersActive) {

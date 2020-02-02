@@ -436,7 +436,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Drone
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7504337634304681765, guid: c16229ff250f18e4aa450bc4882d0e6e, type: 3}
+    - {fileID: 8409184471301266032, guid: c16229ff250f18e4aa450bc4882d0e6e, type: 3}
+    - {fileID: 1961362362499992849, guid: c16229ff250f18e4aa450bc4882d0e6e, type: 3}
+    - {fileID: 6634688004588263789, guid: c16229ff250f18e4aa450bc4882d0e6e, type: 3}
+    - {fileID: 1365893843606477834, guid: c16229ff250f18e4aa450bc4882d0e6e, type: 3}
+    - {fileID: 9194264272010867115, guid: c16229ff250f18e4aa450bc4882d0e6e, type: 3}
+    - {fileID: 765566770328751309, guid: c16229ff250f18e4aa450bc4882d0e6e, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c16229ff250f18e4aa450bc4882d0e6e, type: 3}
 --- !u!1 &970762874 stripped
 GameObject:

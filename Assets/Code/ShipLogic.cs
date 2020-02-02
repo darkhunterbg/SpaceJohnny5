@@ -1,34 +1,35 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ShipLogic : MonoBehaviour
 {
 	public int PartsTotal;
-	public int PartsReceived;
-	
-	private GameView _view;
-	private GameLevel _level;
+	[FormerlySerializedAs("PartsReceived")] public int PartsDelivered;
+	public IList<PartLogic> Parts => _parts;
+	private List<PartLogic> _parts;
 
+	private GameView _view;
+	
 	public void Start()
 	{
-		PartLogic[] parts = FindObjectsOfType<PartLogic>();
-		PartsTotal = parts.Length;
+		_parts = FindObjectsOfType<PartLogic>().ToList();
+		PartsTotal = _parts.Count;
 		_view = FindObjectOfType<GameView>();
-		_view.SetPartsLeft(PartsReceived, PartsTotal);
-		_level = FindObjectOfType<GameLevel>();
 	}
 	
 	public void DeliverPart(PartLogic partLogic)
 	{
-		++PartsReceived;
+		++PartsDelivered;
 
-		_level.BroadcastPartDelivered(partLogic);
+		_parts.Remove(partLogic);
+		_view.PartDelivered(partLogic);
 
-		_view.SetPartsLeft(PartsReceived, PartsTotal);
-		
-		if (PartsReceived >= PartsTotal) {
+		if (PartsDelivered == PartsTotal) {
 			Game.Instance.StartLevel("Victory", new GameResult {
 				Type = GameResultType.Victory,
-				PartsReceived = PartsReceived,
+				PartsDelivered = PartsDelivered,
 				PartsTotal = PartsTotal,
 				Time = FindObjectOfType<GameLevel>().TimeElapsed,
 			});

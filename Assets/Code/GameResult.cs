@@ -9,6 +9,6 @@ public class GameResult
 {
 	public GameResultType Type;
 	public float Time;
-	public int PartsReceived;
+	public int PartsDelivered;
 	public int PartsTotal;
 }

@@ -27,11 +27,10 @@ public class GameView : MonoBehaviour
 	{
 		_canvas = GetComponent<Canvas>();
 		_gameLevel = FindObjectOfType<GameLevel>();
-		_gameLevel.OnPartDelivered += GameLevel_OnPartDelivered;
 
 		MovementCursor.Init(_gameLevel, _canvas);
 
-		foreach (var part in _gameLevel.Parts) {
+		foreach (var part in _gameLevel.Ship.Parts) {
 			SSGUIObject marker = GameObject.Instantiate(PartIndicatorPrefab, transform);
 			marker.Init(_canvas, _gameLevel.Drone.transform);
 			marker.TrackingObject = part.gameObject;
@@ -43,9 +42,7 @@ public class GameView : MonoBehaviour
 		shipMarker.TrackingObject = _gameLevel.Ship.gameObject;
 		TrackingObjects.Add(shipMarker);
 	}
-
-
-
+	
 	public void OnTestVictoryButtonPressed()
 	{
 		Game.Instance.StartLevel("Victory");
@@ -61,26 +58,37 @@ public class GameView : MonoBehaviour
 		// SGG show bar
 		DroneBatteryText.text = $"Battery: {batteryRemaining:000.00}";
 	}
-
-	public void SetPartsLeft(int parts, int total)
-	{
-		PartsLeftText.text = $"Pars: {parts}/{total}";
-	}
-
-	private void GameLevel_OnPartDelivered(PartLogic part)
+	
+	public void PartDelivered(PartLogic part)
 	{
 		var marker = TrackingObjects.Find(p => p.TrackingObject == part.gameObject);
 
 		if (marker != null) {
 			TrackingObjects.Remove(marker);
-			GameObject.Destroy(marker.gameObject);
+			Destroy(marker.gameObject);
+		}
+	}
+	
+	public void UpdatePartsInfo()
+	{
+		int partsCarried = _gameLevel.Drone.Parts.Count;
+		int partsTotal = _gameLevel.Ship.PartsTotal;
+		int partsDelivered = _gameLevel.Ship.PartsDelivered;
+		
+		if (partsCarried == 0)
+		{
+			PartsLeftText.text = $"Parts: {partsDelivered}/{partsTotal}";
+		}
+		else
+		{
+			PartsLeftText.text = $"Parts: {partsCarried} {partsDelivered}/{partsTotal}";
 		}
 	}
 
 	private void Update()
 	{
 		TimeSpan timeElapsed = TimeSpan.FromSeconds(_gameLevel.TimeElapsed);
-		TimeElapsedText.text = $"Time: {timeElapsed:mm\\:ss}";
+		TimeElapsedText.text = $"Time: {timeElapsed:mm\\:ss\\:ff}";
 
 		bool mouseInput = Input.GetMouseButton(0);
 
@@ -89,7 +97,7 @@ public class GameView : MonoBehaviour
 
 		MovementCursor.gameObject.SetActive(!Cursor.visible);
 
-		foreach (var part in _gameLevel.Parts) {
+		foreach (var part in _gameLevel.Ship.Parts) {
 			//if (part.AttachedToShip) {
 
 			SSGUIObject marker = TrackingObjects.Find(p => p.TrackingObject == part.gameObject);
@@ -101,6 +109,7 @@ public class GameView : MonoBehaviour
 		shipMarker.gameObject.SetActive(_gameLevel.Drone.Parts.Any());
 
 		UpdateGravityWellMarkers();
+		UpdatePartsInfo();
 	}
 
 	private void UpdateGravityWellMarkers()

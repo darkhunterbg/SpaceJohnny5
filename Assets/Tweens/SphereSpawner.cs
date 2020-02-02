@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 public class SphereSpawner : MonoBehaviour
@@ -16,9 +15,9 @@ public class SphereSpawner : MonoBehaviour
 	[Header("Preview")]
 	public float SpawnObjects;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+  // Start is called before the first frame update
+  void Start()
+  {
 		Random.InitState(System.DateTime.Now.Millisecond);
 		SpawnObjects = Random.Range(MinObjects, MaxObjects);
 
