@@ -12,7 +12,8 @@ public class DroneController : MonoBehaviour
 	public ParticleSystem LeftThruster;
 	public ParticleSystem RightThruster;
 	public GameObject ShipVisual;
-
+	public AudioSource ThrustersAudio;
+	
 	[Header("Camera Settings")]
 
 	public float Distance;
@@ -156,6 +157,12 @@ public class DroneController : MonoBehaviour
 		PrevPosition = transform.position;
 
 		transform.position += Velocity * deltaT;
+
+		if (ThrustersActive && !ThrustersAudio.isPlaying) {
+			ThrustersAudio.Play();
+		} else if (!ThrustersActive && ThrustersAudio.isPlaying) {
+			ThrustersAudio.Stop();
+		}
 	}
 
 	private bool ProcessInput(float deltaT, ref Vector3 Acceleration)

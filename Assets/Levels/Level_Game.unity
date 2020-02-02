@@ -536,7 +536,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: c7e8ef0c3bafc9046a78586044bd4d13, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.5
+  m_Volume: 0.25
   m_Pitch: 1
   Loop: 1
   Mute: 0
@@ -1338,6 +1338,16 @@ PrefabInstance:
     - target: {fileID: 5760589726519442193, guid: e0ee061419ed94541ae6569f81e6919a,
         type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7175788308390163153, guid: e0ee061419ed94541ae6569f81e6919a,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7175788308390163153, guid: e0ee061419ed94541ae6569f81e6919a,
+        type: 3}
+      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8601605898460652513, guid: e0ee061419ed94541ae6569f81e6919a,
