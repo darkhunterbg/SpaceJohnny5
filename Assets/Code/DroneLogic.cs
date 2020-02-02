@@ -86,8 +86,18 @@ public class DroneLogic : MonoBehaviour
 
 	private void PickupPowerUp(GameObject powerUp)
 	{
-		ChargeBattery(20);
-		_view.PowerUpPicked(powerUp.GetComponent<PowerUpLogic>());
+		var powerUpLogic = powerUp.GetComponent<PowerUpLogic>();
+
+		switch (powerUpLogic.Type) {
+			case PowerUpType.Battery:
+				ChargeBattery(20);
+				break;
+			case PowerUpType.Speed:
+				_droneController.IncreaseVelocityFor(multiplier: 3f, time: 4);
+				break;
+		}
+		
+		_view.PowerUpPicked(powerUpLogic);
 		Destroy(powerUp);
 		BatteryPickUpAudio.Play();
 	}

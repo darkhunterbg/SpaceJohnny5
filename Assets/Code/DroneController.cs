@@ -65,7 +65,20 @@ public class DroneController : MonoBehaviour
 	public Vector3 PrevPosition;
 	public bool ThrustersActive;
 
-	private float StunnedUntilTime;
+	private float VelocityChangedUntilTime;
+	private float VelocityMultiplier;
+
+	private float MaxVelocityIncludingMultiplier
+	{
+		get
+		{
+			if (Time.time < VelocityChangedUntilTime) {
+				return MaxVelocity * VelocityMultiplier;
+			}
+
+			return MaxVelocity;
+		}
+	}
 	
 	// Start is called before the first frame update
 	void Start()
@@ -146,7 +159,7 @@ public class DroneController : MonoBehaviour
 		VelocityMagnitude = Velocity.magnitude;
 
 		if (State == DroneControllerState.FreeControl) {
-			VelocityMagnitude = Mathf.Clamp(Velocity.magnitude, 0, MaxVelocity);
+			VelocityMagnitude = Mathf.Clamp(Velocity.magnitude, 0, MaxVelocityIncludingMultiplier);
 		}
 
 		if (VelocityMagnitude < 0.01f)
@@ -162,6 +175,12 @@ public class DroneController : MonoBehaviour
 			ThrustersAudio.Play();
 		} else if (!ThrustersActive && ThrustersAudio.isPlaying) {
 			ThrustersAudio.Stop();
+		}
+
+		if (MaxVelocityIncludingMultiplier != MaxVelocity) {
+			ThrustersAudio.pitch = 1.2f;
+		} else {
+			ThrustersAudio.pitch = 1.0f;
 		}
 	}
 
@@ -248,7 +267,7 @@ public class DroneController : MonoBehaviour
 	private void LateUpdate()
 	{
 		Vector3 offset = Vector3.zero;
-		float extraDistanceShift = MaxVelocityDistanceShiftCurve.Evaluate(VelocityMagnitude / MaxVelocity) * MaxVelocityDistanceShift;
+		float extraDistanceShift = MaxVelocityDistanceShiftCurve.Evaluate(VelocityMagnitude / MaxVelocityIncludingMultiplier) * MaxVelocityDistanceShift;
 		float distance = Distance + extraDistanceShift;
 		offset += -transform.forward * distance;
 
@@ -263,5 +282,11 @@ public class DroneController : MonoBehaviour
 
 		Camera.transform.rotation = transform.rotation;
 		Camera.transform.Rotate(new Vector3(RotationRate.x * RotationRateOffsetScale.y, RotationRate.y * RotationRateOffsetScale.x, 0));
+	}
+
+	public void IncreaseVelocityFor(float multiplier, float time)
+	{
+		VelocityChangedUntilTime = Time.time + time;
+		VelocityMultiplier = multiplier;
 	}
 }
