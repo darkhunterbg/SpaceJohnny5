@@ -23,7 +23,10 @@ public class GameView : MonoBehaviour
 
 	public float BatteryIndicatorAppearanceRange = 30;
 
+	public bool AlwayShowShipIndicator = true;
+
 	private Canvas _canvas;
+
 
 	public readonly List<SSGUIObject> TrackingObjects = new List<SSGUIObject>();
 
@@ -127,7 +130,7 @@ public class GameView : MonoBehaviour
 		Cursor.lockState = mouseInput ? CursorLockMode.Confined : CursorLockMode.None;
 		Cursor.visible = !mouseInput;
 
-		if(!MovementCursor.gameObject.activeSelf&& !Cursor.visible) {
+		if (!MovementCursor.gameObject.activeSelf && !Cursor.visible) {
 			MovementCursor.Prepare();
 		}
 
@@ -143,7 +146,9 @@ public class GameView : MonoBehaviour
 	private void UpdateShipIndicator()
 	{
 		SSGUIObject shipMarker = TrackingObjects.Find(p => p.TrackingObject == _gameLevel.Ship.gameObject);
-		shipMarker.gameObject.SetActive(_gameLevel.Drone.Parts.Any());
+
+		shipMarker.gameObject.SetActive(AlwayShowShipIndicator || _gameLevel.Drone.Parts.Any());
+
 	}
 
 	private void UpdatePartsIndicators()
