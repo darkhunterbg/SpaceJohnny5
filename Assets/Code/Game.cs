@@ -91,6 +91,16 @@ public class Game : MonoBehaviour
 
 	private IEnumerator<YieldInstruction> CurtainUpCrt()
 	{
+		var music = GameObject.FindWithTag("Music");
+		AudioSource audioSource = null;
+		float maxVolume = 0;
+		
+		if (music != null) {
+			audioSource = music.GetComponent<AudioSource>();
+			maxVolume = audioSource.volume;
+			audioSource.Play();
+		}
+		
 		float startTime = Time.time;
 		float endTime = startTime + TransitionTime;
 
@@ -101,16 +111,35 @@ public class Game : MonoBehaviour
 				break;
 			}
 
-			_curtainCanvas.alpha = 1 - (now - startTime) / TransitionTime;
+			float lerpCoef = (now - startTime) / TransitionTime;
+			_curtainCanvas.alpha = 1 - lerpCoef;
+			
+			if (audioSource != null) {
+				audioSource.volume = Mathf.Lerp(0, maxVolume, lerpCoef);
+			}
+			
 			yield return new WaitForSeconds(0);
 		}
 
 		_curtainCanvas.blocksRaycasts = false;
 		_curtainCanvas.alpha = 0;
+
+		if (audioSource != null) {
+			audioSource.volume = maxVolume;
+		}
 	}
 
 	private IEnumerator<YieldInstruction> CurtainDownCrt()
 	{
+		var music = GameObject.FindWithTag("Music");
+		AudioSource audioSource = null;
+		float maxVolume = 0;
+		
+		if (music != null) {
+			audioSource = music.GetComponent<AudioSource>();
+			maxVolume = audioSource.volume;
+		}
+		
 		_curtainCanvas.blocksRaycasts = true;
 		float startTime = Time.time;
 		float endTime = startTime + TransitionTime;
@@ -122,10 +151,21 @@ public class Game : MonoBehaviour
 				break;
 			}
 
-			_curtainCanvas.alpha = (now - startTime) / TransitionTime;
+			float lerpCoef = (now - startTime) / TransitionTime;
+			_curtainCanvas.alpha = lerpCoef;
+
+			if (audioSource != null) {
+				audioSource.volume = Mathf.Lerp(maxVolume, 0, lerpCoef);
+			}
+			
 			yield return new WaitForSeconds(0);
 		}
 
 		_curtainCanvas.alpha = 1;
+
+		if (audioSource != null) {
+			audioSource.volume = 0;
+			audioSource.Stop();
+		}
 	}
 }
