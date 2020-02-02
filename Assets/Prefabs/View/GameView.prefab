@@ -542,6 +542,7 @@ MonoBehaviour:
   BatteryIndicatorPrefab: {fileID: 3130054392602008196, guid: d8373201c2f56944885cfcbd423efd7f,
     type: 3}
   BatteryIndicatorAppearanceRange: 60
+  AlwayShowShipIndicator: 1
 --- !u!1 &1409567004510090450
 GameObject:
   m_ObjectHideFlags: 0
@@ -721,11 +722,11 @@ RectTransform:
   m_Father: {fileID: 4256371954929565196}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -5.22}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 43.7}
   m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &5635844254702050550
 GameObject:
   m_ObjectHideFlags: 0
@@ -758,9 +759,9 @@ RectTransform:
   m_Father: {fileID: 3818024101285449410}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.000038147, y: -489.94}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -0.000038147, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5737772176369381674
@@ -943,7 +944,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 282.2, y: -496.04996}
+  m_AnchoredPosition: {x: 282.2, y: -55.77}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1001 &364564205244439896
