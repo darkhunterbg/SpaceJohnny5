@@ -9,6 +9,7 @@ public class DroneLogic : MonoBehaviour
 	public float ThrustersBatteryDrain = 1.0f;
 	public AudioSource HurtAudio;
 	public AudioSource BatteryPickUpAudio;
+	public AudioSource DeliverPartAudio;
 	
 	public bool Dead => _batteryRemaining <= 0;
 	public float BatteryRemaining => _batteryRemaining;
@@ -65,6 +66,7 @@ public class DroneLogic : MonoBehaviour
 			
 			case "Ship":
 				DeliverParts(other.gameObject);
+				DeliverPartAudio.Play();
 				break;
 			
 			case "PowerUps":
