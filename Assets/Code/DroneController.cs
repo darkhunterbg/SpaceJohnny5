@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public enum DroneControllerState
 {
@@ -10,7 +10,11 @@ public class DroneController : MonoBehaviour
 {
 	public Camera Camera;
 	public ParticleSystem LeftThruster;
+	public ParticleSystem[] LeftThrusterSecondary;
+	public TrailRenderer[] LeftTrails;
 	public ParticleSystem RightThruster;
+	public ParticleSystem[] RightThrusterSecondary;
+	public TrailRenderer[] RightTrails;
 	public GameObject ShipVisual;
 	public AudioSource ThrustersAudio;
 
@@ -194,7 +198,7 @@ public class DroneController : MonoBehaviour
 
 	private bool ProcessInput(float deltaT, ref Vector3 Acceleration)
 	{
-		bool input = false; 
+		bool input = false;
 
 		if (State == DroneControllerState.FreeControl) {
 			input = Input.GetMouseButton(0);
@@ -256,19 +260,35 @@ public class DroneController : MonoBehaviour
 		}
 
 #pragma warning disable 0618
-			if (leftState && !LeftThruster.enableEmission)
-				LeftThruster.enableEmission = true;
+		if (leftState && !LeftThruster.enableEmission)
+			LeftThruster.enableEmission = true;
 
-			if (!leftState && LeftThruster.enableEmission)
-				LeftThruster.enableEmission = false;
+		if (!leftState && LeftThruster.enableEmission)
+			LeftThruster.enableEmission = false;
 
-			if (rightState && !RightThruster.enableEmission)
-				RightThruster.enableEmission = true;
+		if (rightState && !RightThruster.enableEmission)
+			RightThruster.enableEmission = true;
 
-			if (!rightState && RightThruster.enableEmission)
-				RightThruster.enableEmission = false;
+		if (!rightState && RightThruster.enableEmission)
+			RightThruster.enableEmission = false;
+
+		foreach (TrailRenderer t in LeftTrails) {
+			t.emitting = LeftThruster.enableEmission;
+		}
+
+		foreach (var secondary in LeftThrusterSecondary) {
+			secondary.enableEmission = LeftThruster.enableEmission;
+		}
+
+		foreach (TrailRenderer t in RightTrails) {
+			t.emitting = RightThruster.enableEmission;
+		}
+
+		foreach (var secondary in RightThrusterSecondary) {
+			secondary.enableEmission = RightThruster.enableEmission;
+		}
 #pragma warning restore 0618
-		
+
 		return input;
 	}
 
