@@ -3,7 +3,8 @@ using UnityEngine;
 public enum DroneControllerState
 {
 	FreeControl,
-	Hit
+	Hit,
+	Dead,
 }
 
 public class DroneController : MonoBehaviour
