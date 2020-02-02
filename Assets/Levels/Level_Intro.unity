@@ -1068,27 +1068,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1750956193}
     m_Modifications:
-    - target: {fileID: 1213687087288949401, guid: 47643e2984bd77a4aa891f890ef64af6,
-        type: 3}
-      propertyPath: m_FontData.m_Font
-      value: 
-      objectReference: {fileID: 12800000, guid: 3f4bb6bf85022974ea3da48341b259a5,
-        type: 3}
-    - target: {fileID: 1213687087288949401, guid: 47643e2984bd77a4aa891f890ef64af6,
-        type: 3}
-      propertyPath: m_Color.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1213687087288949401, guid: 47643e2984bd77a4aa891f890ef64af6,
-        type: 3}
-      propertyPath: m_Color.g
-      value: 0.64134085
-      objectReference: {fileID: 0}
-    - target: {fileID: 1213687087288949401, guid: 47643e2984bd77a4aa891f890ef64af6,
-        type: 3}
-      propertyPath: m_Color.b
-      value: 0.8867924
-      objectReference: {fileID: 0}
     - target: {fileID: 1213687087645601034, guid: 47643e2984bd77a4aa891f890ef64af6,
         type: 3}
       propertyPath: m_Name
@@ -1099,21 +1078,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1348907199}
-    - target: {fileID: 1213687087645601044, guid: 47643e2984bd77a4aa891f890ef64af6,
-        type: 3}
-      propertyPath: m_Colors.m_HighlightedColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1213687087645601044, guid: 47643e2984bd77a4aa891f890ef64af6,
-        type: 3}
-      propertyPath: m_Colors.m_HighlightedColor.g
-      value: 0.64134085
-      objectReference: {fileID: 0}
-    - target: {fileID: 1213687087645601044, guid: 47643e2984bd77a4aa891f890ef64af6,
-        type: 3}
-      propertyPath: m_Colors.m_HighlightedColor.b
-      value: 0.8867924
-      objectReference: {fileID: 0}
     - target: {fileID: 1213687087645601045, guid: 47643e2984bd77a4aa891f890ef64af6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1219,12 +1183,6 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 1213687087645601047, guid: 47643e2984bd77a4aa891f890ef64af6,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 18ce713410bdcf84fa20082d7c4e3f55,
-        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 47643e2984bd77a4aa891f890ef64af6, type: 3}
 --- !u!4 &8255748216288774546
