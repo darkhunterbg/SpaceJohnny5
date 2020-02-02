@@ -11,7 +11,9 @@ public class GameView : MonoBehaviour
 	public Slider DroneBatteryProgress;
 	public Text TimeElapsedText;
 	public Text PartsLeftText;
-
+	public GameObject WarningGroup;
+	public Text WarningText;
+	
 	private GameLevel _gameLevel;
 
 	public GameCursor MovementCursor;
