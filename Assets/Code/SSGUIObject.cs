@@ -14,10 +14,12 @@ public class SSGUIObject : MonoBehaviour
 
 	public Text DistanceText;
 
+	public Transform DistanceFrom;
 
-	public void Init(Canvas canvas)
+	public void Init(Canvas canvas, Transform from)
 	{
 		this._canvas = canvas;
+		DistanceFrom = from;
 	}
 
 	public void Update()
@@ -54,7 +56,7 @@ public class SSGUIObject : MonoBehaviour
 			((RectTransform)OutOfSceenVisuals.transform).rotation = Quaternion.Euler(0, 0, rotAngle - 90);
 
 		} else if (OnScreenVisuals != null) {
-			DistanceText.text = (TrackingObject.transform.position - camera.transform.position).magnitude.ToString("0.0").Replace(',', '.');
+			DistanceText.text = ((TrackingObject.transform.position - DistanceFrom.position).magnitude ).ToString("0");
 		}
 	}
 }

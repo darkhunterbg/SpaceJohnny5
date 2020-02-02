@@ -33,13 +33,13 @@ public class GameView : MonoBehaviour
 
 		foreach (var part in _gameLevel.Parts) {
 			SSGUIObject marker = GameObject.Instantiate(PartIndicatorPrefab, transform);
-			marker.Init(_canvas);
+			marker.Init(_canvas, _gameLevel.Drone.transform);
 			marker.TrackingObject = part.gameObject;
 			TrackingObjects.Add(marker);
 		}
 
 		SSGUIObject shipMarker = GameObject.Instantiate(ShipIndicatorPrefab, transform);
-		shipMarker.Init(_canvas);
+		shipMarker.Init(_canvas, _gameLevel.Drone.transform);
 		shipMarker.TrackingObject = _gameLevel.Ship.gameObject;
 		TrackingObjects.Add(shipMarker);
 	}
@@ -109,7 +109,7 @@ public class GameView : MonoBehaviour
 			bool inside = (gravityWell.TestInside(_gameLevel.Drone.transform.position));
 			if (inside && !TrackingObjects.Any(t => t.TrackingObject == gravityWell.gameObject)) {
 				var obj = GameObject.Instantiate(GravityWellWarningPrefab, transform);
-				obj.Init(_canvas);
+				obj.Init(_canvas, _gameLevel.Drone.transform);
 				obj.TrackingObject = gravityWell.gameObject;
 				TrackingObjects.Add(obj);
 			}
