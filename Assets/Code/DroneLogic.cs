@@ -76,6 +76,9 @@ public class DroneLogic : MonoBehaviour
 	{
 		Damage(20);
 		HurtAudio.Play();
+		Vector3 hitCenter = other.collider.bounds.center;
+		Vector3 normal = (transform.position - hitCenter).normalized;
+		_droneController.ApplyHit(normal * 20);
 	}
 
 	private void PickupPowerUp(GameObject powerUp)

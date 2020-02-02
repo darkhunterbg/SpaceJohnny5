@@ -42,7 +42,13 @@ public class GameView : MonoBehaviour
 		shipMarker.TrackingObject = _gameLevel.Ship.gameObject;
 		TrackingObjects.Add(shipMarker);
 	}
-	
+
+	private void OnDestroy()
+	{
+		Cursor.lockState = CursorLockMode.None;
+		Cursor.visible = true;
+	}
+
 	public void OnTestVictoryButtonPressed()
 	{
 		Game.Instance.StartLevel("Victory");

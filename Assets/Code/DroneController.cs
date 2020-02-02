@@ -63,6 +63,8 @@ public class DroneController : MonoBehaviour
 
 	public Vector3 PrevPosition;
 	public bool ThrustersActive;
+
+	private float StunnedUntilTime;
 	
 	// Start is called before the first frame update
 	void Start()
@@ -114,8 +116,7 @@ public class DroneController : MonoBehaviour
 		if (State == DroneControllerState.FreeControl) {
 			mouseInput = ProcessInput(deltaT, ref Acceleration);
 		}
-
-
+		
 		if (!mouseInput) {
 			RotationRate = (1.0f - NoInputRotationRateDampeningCurve.Evaluate(noInputTime / NoInputRotationRateDampeningTime)) * noInputRotationRateRef * RotationRate.normalized;
 		}
@@ -131,8 +132,6 @@ public class DroneController : MonoBehaviour
 		}
 
 		ShipVisual.transform.localRotation = Quaternion.Euler(new Vector3(RotationRate.x * RotationRateExtraVisualRotateScale.y, RotationRate.y * RotationRateExtraVisualRotateScale.x, 0));
-
-
 
 		if (Acceleration == Vector3.zero) {
 			Acceleration = (-Velocity * NoInputDampening);
