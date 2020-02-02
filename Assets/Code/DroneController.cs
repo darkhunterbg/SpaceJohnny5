@@ -86,12 +86,12 @@ public class DroneController : MonoBehaviour
 
 	}
 
-	private void OnGUI()
-	{
-		if(GUI.Button(new Rect(0,0,100,20), "Hit Test")) {
-			ApplyHit(new Vector3(100, 0,0));
-		}
-	}
+	// private void OnGUI()
+	// {
+	// 	if(GUI.Button(new Rect(0,0,100,20), "Hit Test")) {
+	// 		ApplyHit(new Vector3(100, 0,0));
+	// 	}
+	// }
 
 	public void ApplyHit(Vector3 impulse)
 	{

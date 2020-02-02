@@ -22,12 +22,19 @@ public class DroneLogic : MonoBehaviour
 
 	private GameView _view;
 	private GameLevel _level;
+	[SerializeField] private Animator _animator;
+
+
 
 	private void Start()
 	{
 		_droneController = GetComponent<DroneController>();
 		_view = FindObjectOfType<GameView>();
 		_level = FindObjectOfType<GameLevel>();
+
+		if(_animator == null) {
+			_animator.GetComponentInChildren<Animator>();
+		}
 	}
 
 	private void Damage(float amount) // percentage 0..100
@@ -130,6 +137,9 @@ public class DroneLogic : MonoBehaviour
 		}
 		
 		_parts.Add(partLogic);
+
+		// play animation
+		_animator.SetTrigger("Pickup");
 	}
 
 	private void DrainBattery(float amount, bool damage)
