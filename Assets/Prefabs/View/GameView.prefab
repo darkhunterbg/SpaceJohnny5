@@ -546,7 +546,7 @@ MonoBehaviour:
     type: 3}
   SpeedIndicatorPrefab: {fileID: 3130054392602008196, guid: d08745ffdeeba3449895178a4cd41d31,
     type: 3}
-  PowerUpAppearingRange: 60
+  PowerUpAppearingRange: 70
   AlwayShowShipIndicator: 1
 --- !u!1 &1409567004510090450
 GameObject:
