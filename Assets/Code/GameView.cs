@@ -130,17 +130,20 @@ public class GameView : MonoBehaviour
 		//}
 	}
 
-	public void ShowWarningMessage(string message)
+	public void ShowWarningMessage(string message, bool persistent = false)
 	{
 		WarningGroup.SetActive(true);
 		WarningText.text = message;
 		StopCoroutine(nameof(HideWarningMessageCrt));
-		StartCoroutine(nameof(HideWarningMessageCrt));
+		
+		if (!persistent) {
+			StartCoroutine(nameof(HideWarningMessageCrt));
+		}
 	}
 
 	private IEnumerator HideWarningMessageCrt()
 	{
-		yield return new WaitForSeconds(3);
+		yield return new WaitForSeconds(2.5f);
 		WarningGroup.SetActive(false);
 	}
 	

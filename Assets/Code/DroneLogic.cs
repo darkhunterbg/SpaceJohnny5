@@ -23,9 +23,7 @@ public class DroneLogic : MonoBehaviour
 	private GameView _view;
 	private GameLevel _level;
 	[SerializeField] private Animator _animator;
-
-
-
+	
 	private void Start()
 	{
 		_droneController = GetComponent<DroneController>();
@@ -87,11 +85,11 @@ public class DroneLogic : MonoBehaviour
 	private void HitObstacle(Collision other)
 	{
 		_view.ShowWarningMessage("-20 BATTERY");
-		Damage(20);
-		HurtAudio.Play();
 		Vector3 hitCenter = other.collider.bounds.center;
 		Vector3 normal = (transform.position - hitCenter).normalized;
 		_droneController.ApplyHit(normal * 20);
+		Damage(20);
+		HurtAudio.Play();
 	}
 
 	private void PickupPowerUp(GameObject powerUp)
@@ -134,7 +132,7 @@ public class DroneLogic : MonoBehaviour
 			return;
 		}
 		
-		_view.ShowWarningMessage($"PART PICKED UP");
+		_view.ShowWarningMessage("PART PICKED UP");
 		
 		if (_parts.Count == 0) {
 			partLogic.Attach(transform);	
@@ -159,12 +157,15 @@ public class DroneLogic : MonoBehaviour
 		
 		if (_batteryRemaining <= 0) {
 			_batteryRemaining = 0;
-			EndLevel(damage);
+			_view.ShowWarningMessage(damage? "DRONE DESTROYED" : "BATTERY DEPLETED", persistent: true);
+			StartCoroutine(EndLevelCrt(damage));
 		}
 	}
 
-	private void EndLevel(bool damage)
+	private IEnumerator<YieldInstruction> EndLevelCrt(bool damage)
 	{
+		_level.StopTimer();
+		_droneController.State = DroneControllerState.Dead;
 		var ship = FindObjectOfType<ShipLogic>();
 		var gameLevel = FindObjectOfType<GameLevel>();
 
@@ -175,9 +176,18 @@ public class DroneLogic : MonoBehaviour
 			PartsDelivered = ship.PartsDelivered,
 			PartsTotal = ship.PartsTotal,
 		};
+		
+		foreach (var renderer in gameObject.GetComponentsInChildren<Renderer>()) {
+			renderer.enabled = false;
+		}
 
+		foreach (var light in gameObject.GetComponentsInChildren<Light>()) {
+			light.enabled = false;
+		}
+		
 		// TODO Explode drone if needed
-		// TODO Wait couple of seconds
+		
+		yield return new WaitForSeconds(5);
 		Game.Instance.StartLevel("Defeat", gameResult);
 	}
 	
