@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class GameView : MonoBehaviour
 {
 	public Text DroneBatteryText;
+	public Slider DroneBatteryProgress;
 	public Text TimeElapsedText;
 	public Text PartsLeftText;
 
@@ -18,6 +19,7 @@ public class GameView : MonoBehaviour
 	public SSGUIObject GravityWellWarningPrefab;
 	public SSGUIObject PartIndicatorPrefab;
 	public SSGUIObject ShipIndicatorPrefab;
+
 
 	private Canvas _canvas;
 
@@ -62,9 +64,11 @@ public class GameView : MonoBehaviour
 	public void SetDroneBatteryRemaining(float batteryRemaining)
 	{
 		// SGG show bar
-		DroneBatteryText.text = $"Battery: {batteryRemaining:000.00}";
+		float battery = Mathf.Ceil(batteryRemaining);
+		DroneBatteryText.text = $"{(int)battery}";
+		DroneBatteryProgress.value = Mathf.CeilToInt(battery / 5);
 	}
-	
+
 	public void PartDelivered(PartLogic part)
 	{
 		var marker = TrackingObjects.Find(p => p.TrackingObject == part.gameObject);
@@ -74,27 +78,25 @@ public class GameView : MonoBehaviour
 			Destroy(marker.gameObject);
 		}
 	}
-	
+
 	public void UpdatePartsInfo()
 	{
 		int partsCarried = _gameLevel.Drone.Parts.Count;
 		int partsTotal = _gameLevel.Ship.PartsTotal;
 		int partsDelivered = _gameLevel.Ship.PartsDelivered;
-		
-		if (partsCarried == 0)
-		{
-			PartsLeftText.text = $"Parts: {partsDelivered}/{partsTotal}";
-		}
-		else
-		{
-			PartsLeftText.text = $"Parts: {partsCarried} {partsDelivered}/{partsTotal}";
-		}
+		int partsRemaining = partsTotal - partsDelivered;
+
+		//if (partsCarried == 0) {
+		//	PartsLeftText.text = $"{partsDelivered}/{partsTotal}";
+		//} else {
+			PartsLeftText.text = $"{partsCarried}/{partsRemaining}";
+		//}
 	}
 
 	private void Update()
 	{
 		TimeSpan timeElapsed = TimeSpan.FromSeconds(_gameLevel.TimeElapsed);
-		TimeElapsedText.text = $"Time: {timeElapsed:mm\\:ss\\:ff}";
+		TimeElapsedText.text = $"{timeElapsed:mm\\:ss\\:ff}";
 
 		bool mouseInput = Input.GetMouseButton(0);
 
