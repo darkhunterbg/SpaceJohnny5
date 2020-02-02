@@ -124,9 +124,9 @@ public class GameView : MonoBehaviour
 		int partsRemaining = partsTotal - partsDelivered;
 
 		//if (partsCarried == 0) {
-		//	PartsLeftText.text = $"{partsDelivered}/{partsTotal}";
+		PartsLeftText.text = $"{partsDelivered}/{partsTotal}";
 		//} else {
-		PartsLeftText.text = $"{partsCarried}/{partsRemaining}";
+		// PartsLeftText.text = $"{partsCarried}/{partsRemaining}";
 		//}
 	}
 

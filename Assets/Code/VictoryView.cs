@@ -27,6 +27,7 @@ public class VictoryView : MonoBehaviour
 	{
 		Game.Instance.QuitGame();
 	}
+	
 	public void Update()
 	{
 		Ship.transform.position += Ship.transform.forward * ShipSpeed * Time.deltaTime;
