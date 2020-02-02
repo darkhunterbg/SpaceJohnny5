@@ -20,13 +20,13 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.3490566, g: 0.14324494, b: 0.22140127, a: 0}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
-  m_AmbientMode: 0
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: b13109bc4674dd24ebc04b7c12437ad6, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 8401881fcb9afd34eb383fc90bbbbddc, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -501,6 +501,75 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 479464148}
   m_CullTransparentMesh: 0
+--- !u!1001 &694152722
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7083358598922414565, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.5034232
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083358598922414565, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.3951131
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083358598922414565, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.031661034
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083358598922414565, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083358598922414565, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083358598922414565, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083358598922414565, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083358598922414565, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083358598922414565, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083358598922414565, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083358598922414565, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7083358598922414567, guid: 946374cd3006f794bb68a0edb7adf454,
+        type: 3}
+      propertyPath: m_Name
+      value: PurpleGalaxyEnvironmentFX
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 946374cd3006f794bb68a0edb7adf454, type: 3}
 --- !u!1 &819328852
 GameObject:
   m_ObjectHideFlags: 0
@@ -888,7 +957,7 @@ MonoBehaviour:
   isGlobal: 1
   blendDistance: 0
   weight: 1
-  priority: 0
+  priority: 10
 --- !u!65 &1270528421
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1271,7 +1340,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8612029720637991077}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
