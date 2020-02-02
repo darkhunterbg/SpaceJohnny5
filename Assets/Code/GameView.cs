@@ -20,8 +20,9 @@ public class GameView : MonoBehaviour
 	public SSGUIObject PartIndicatorPrefab;
 	public SSGUIObject ShipIndicatorPrefab;
 	public SSGUIObject BatteryIndicatorPrefab;
+	public SSGUIObject SpeedIndicatorPrefab;
 
-	public float BatteryIndicatorAppearanceRange = 30;
+	public float PowerUpAppearingRange = 60;
 
 	public bool AlwayShowShipIndicator = true;
 
@@ -46,7 +47,12 @@ public class GameView : MonoBehaviour
 
 
 		foreach (var part in _gameLevel.PowerUps) {
-			SSGUIObject marker = GameObject.Instantiate(BatteryIndicatorPrefab, transform);
+			SSGUIObject marker = null;
+
+			switch (part.Type) {
+				case PowerUpType.Battery: marker = GameObject.Instantiate(BatteryIndicatorPrefab, transform); break;
+				case PowerUpType.Speed: marker = GameObject.Instantiate(SpeedIndicatorPrefab, transform); break;
+			}
 			marker.gameObject.SetActive(false);
 			marker.Init(_canvas, _gameLevel.Drone.transform);
 			marker.TrackingObject = part.gameObject;
@@ -162,7 +168,7 @@ public class GameView : MonoBehaviour
 	private void UpdatePowerIndicators()
 	{
 		foreach (var powerUp in _gameLevel.PowerUps) {
-			bool inRange = (powerUp.transform.position - _gameLevel.Drone.transform.position).magnitude < BatteryIndicatorAppearanceRange;
+			bool inRange = (powerUp.transform.position - _gameLevel.Drone.transform.position).magnitude < PowerUpAppearingRange;
 			SSGUIObject marker = TrackingObjects.Find(p => p.TrackingObject == powerUp.gameObject);
 
 			marker.gameObject.SetActive(inRange);
