@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 2488520217618918139}
   - component: {fileID: -1199374336571526292}
   m_Layer: 10
-  m_Name: Battery
+  m_Name: Speed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ac27bee4b37f5c428f1d2d7c7d01638, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Type: 10
+  Type: 20
 --- !u!1 &9166694283598446646
 GameObject:
   m_ObjectHideFlags: 0
