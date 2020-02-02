@@ -539,6 +539,9 @@ MonoBehaviour:
     type: 3}
   ShipIndicatorPrefab: {fileID: 3130054392602008196, guid: 363b178a13bec984795e0cf2d053057e,
     type: 3}
+  BatteryIndicatorPrefab: {fileID: 3130054392602008196, guid: d8373201c2f56944885cfcbd423efd7f,
+    type: 3}
+  BatteryIndicatorAppearanceRange: 60
 --- !u!1 &1409567004510090450
 GameObject:
   m_ObjectHideFlags: 0
