@@ -57918,6 +57918,7 @@ MonoBehaviour:
   BatteryPickUpAudio: {fileID: 9194264272010867115}
   DeliverPartAudio: {fileID: 765566770328751309}
   _animator: {fileID: 8701869417001658467}
+  _shockParticles: {fileID: 1245123258197911240}
 --- !u!114 &1961362362499992849
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,7 +24,10 @@ public class DroneLogic : MonoBehaviour
 	private GameView _view;
 	private GameLevel _level;
 	[SerializeField] private Animator _animator;
-	
+	[SerializeField] private ParticleSystem _shockParticles;
+
+
+#pragma warning disable 0618
 	private void Start()
 	{
 		_droneController = GetComponent<DroneController>();
@@ -33,6 +37,8 @@ public class DroneLogic : MonoBehaviour
 		if(_animator == null) {
 			_animator.GetComponentInChildren<Animator>();
 		}
+
+		_shockParticles.enableEmission = false;
 	}
 
 	private void Damage(float amount) // percentage 0..100
@@ -81,7 +87,7 @@ public class DroneLogic : MonoBehaviour
 				break;
 		}
 	}
-	
+
 	private void HitObstacle(Collision other)
 	{
 		_view.ShowWarningMessage("-20 BATTERY");
@@ -90,7 +96,16 @@ public class DroneLogic : MonoBehaviour
 		_droneController.ApplyHit(normal * 20);
 		Damage(20);
 		HurtAudio.Play();
+		_shockParticles.enableEmission = true;
+		StartCoroutine(StopShockParticlesAfterTime(1.5f));
 	}
+
+	private IEnumerator StopShockParticlesAfterTime (float time)
+	{
+		yield return new WaitForSeconds(time);
+		_shockParticles.enableEmission = false;
+	}
+#pragma warning restore 0618
 
 	private void PickupPowerUp(GameObject powerUp)
 	{
