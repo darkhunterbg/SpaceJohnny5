@@ -7,6 +7,8 @@ public class PartLogic : MonoBehaviour
 	public float FollowSpeed = 3;
 	public float RotateSpeed = 3;
 	public float FollowDistance = 2.5f;
+
+	[SerializeField] private LineRenderer hookVisual;
 	
 	private Transform _followTarget;
 	private PartLogic _nextPart;
@@ -75,5 +77,21 @@ public class PartLogic : MonoBehaviour
 			Vector3 newVelocity = _velocity.normalized * newSpeed;
 			transform.position += newVelocity * Time.deltaTime;
 		}
+
+		UpdateHookVisual();
+	}
+
+	private void UpdateHookVisual()
+	{
+		if (_followTarget == null) {
+			hookVisual.enabled = false;
+			return;
+		}
+
+		hookVisual.enabled = true;
+		var positions = new Vector3[2];
+		positions[0] = transform.position;
+		positions[1] = _followTarget.position;
+		hookVisual.SetPositions(positions);
 	}
 }

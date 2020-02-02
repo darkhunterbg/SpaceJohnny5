@@ -14582,6 +14582,7 @@ MonoBehaviour:
   HurtAudio: {fileID: 1365893843606477834}
   BatteryPickUpAudio: {fileID: 9194264272010867115}
   DeliverPartAudio: {fileID: 765566770328751309}
+  _animator: {fileID: 8701869417001658467}
 --- !u!114 &1961362362499992849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19773,6 +19774,12 @@ PrefabInstance:
     - {fileID: 6869586203771178366, guid: bc93174346cbe8f48adbb75610906493, type: 3}
     - {fileID: 3615969745089639968, guid: bc93174346cbe8f48adbb75610906493, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bc93174346cbe8f48adbb75610906493, type: 3}
+--- !u!95 &8701869417001658467 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 4762395806785384755, guid: bc93174346cbe8f48adbb75610906493,
+    type: 3}
+  m_PrefabInstance: {fileID: 4239063590926588240}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4241097810030111096 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4303611822649384, guid: bc93174346cbe8f48adbb75610906493,
