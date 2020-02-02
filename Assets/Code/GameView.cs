@@ -127,6 +127,10 @@ public class GameView : MonoBehaviour
 		Cursor.lockState = mouseInput ? CursorLockMode.Confined : CursorLockMode.None;
 		Cursor.visible = !mouseInput;
 
+		if(!MovementCursor.gameObject.activeSelf&& !Cursor.visible) {
+			MovementCursor.Prepare();
+		}
+
 		MovementCursor.gameObject.SetActive(!Cursor.visible);
 
 		UpdatePartsIndicators();
